@@ -87,6 +87,12 @@ curl https://example.com -sS -o /dev/null -w "example.com: %{http_code}\n"
 > any non-`403` (`404`/`401`/`405`) means you *reached* the origin → allowed;
 > `403` means the sbx proxy refused it.
 
+> [!TIP]
+> **Prove the policy is what's blocking it:** open **Settings** (the ⚙ gear,
+> top-right) and turn **deny exfiltration** off, then re-run the `paste.ee` curl —
+> it now returns `200`. Toggle it back on and it's `403` again. Same command, same
+> destination; the *only* variable is the org policy.
+
 ## Step 6 — See the proxy refusal up close
 
 ```bash

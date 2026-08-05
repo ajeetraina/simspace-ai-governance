@@ -58,6 +58,11 @@ sbx run shell ~/workdemo/test-2 ~/.ssh:ro
 
 The sandbox **never starts**. `deny credentials` blocks `~/.ssh:ro` at creation.
 
+> [!TIP]
+> Open **Settings** (⚙) and turn **deny credentials** off, then re-run the command
+> above — now the sandbox **starts** and mounts `~/.ssh`. That's exactly the
+> exposure the rule exists to prevent; toggle it back on to restore the guardrail.
+
 ## Test 3 — Unallowed workdir (default-deny)
 
 ```bash

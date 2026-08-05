@@ -81,4 +81,25 @@ When the org sets a policy for a rule type, local rules of that type go
 > keeping real API keys out of the sandbox — is a sandbox runtime protection you
 > configure developer-side. It complements these policies (its own section later).
 
+## Try it live — the policy switches
+
+In the real product an admin flips these rules in the
+[app.docker.com](https://app.docker.com) **AI governance** console. This lab gives
+you the same switches: open **Settings** (the ⚙ gear, top-right, next to Reset) and
+you'll find three toggles —
+
+- **AI Governance — enforced by your org** (the master switch)
+- **Network rule: deny exfiltration**
+- **Filesystem rule: deny credentials**
+
+They start **on**. Flip one **off**, then re-run the relevant command and watch
+enforcement change — e.g. turn *AI Governance* off and run `sbx policy ls` (the
+`managed by $$org$$` header disappears), or turn *deny exfiltration* off and re-run
+the `paste.ee` curl in the next section (it returns `200` instead of `403`). Toggle
+them back on to restore the governed posture.
+
+> [!TIP]
+> The toggles are the fastest way to *feel* default-deny: with governance off,
+> the very same commands that were blocked now sail through.
+
 Now let's prove it works end-to-end — starting with **Network Enforcement**.

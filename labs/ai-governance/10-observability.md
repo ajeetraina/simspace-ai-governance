@@ -82,20 +82,37 @@ collect `*.jsonl`** (skip the half-written `.tmp`), and **retention is yours**.
 
 ## Part 4 — Governance-as-code (the API)
 
-Everything you did in the Admin Console has an HTTP equivalent. The same helper
-from the Network demo drives the Governance API to provision policies — ideal for
-version control and CI. Scope it to one domain, or run it bare for both:
+Everything you did in the Admin Console has an HTTP equivalent on the
+[**AI Governance API**](https://docs.docker.com/reference/api/ai-governance/)
+(`https://hub.docker.com/v2`) — ideal for version control, CI, and admin tooling.
 
-```bash
-bash setup-policies.sh network
-```
-
-Minting an admin token is a one-time step (a JWT from a Personal Access Token):
+**Mint an admin token** (a short-lived JWT from a Personal Access Token) — a
+one-time, interactive step:
 
 ```bash no-run-button
 curl -fsS -X POST https://hub.docker.com/v2/users/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"<you>","password":"<PAT>"}'   # → { "token": "..." }
+  -d '{"username":"<you>","password":"<PAT>"}'   # → { "token": "..." }  → export TOKEN=...
+```
+
+**List the org's policies** — every call is `Authorization: Bearer <token>`:
+
+```bash
+curl -X GET https://hub.docker.com/v2/orgs/$$org$$/governance/policies -H "Authorization: Bearer $TOKEN"
+```
+
+**Create a policy** — POST returns `201` with the new resource:
+
+```bash
+curl -X POST https://hub.docker.com/v2/orgs/$$org$$/governance/policies -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{"name":"Labspace AI Governance - network","type":"allowlist_v0"}'
+```
+
+From there you'd `POST .../policies/{id}/rules` to add the allow/deny rules. The
+`setup-policies.sh` helper you ran earlier just wraps these calls so you provision
+everything in one shot:
+
+```bash
+bash setup-policies.sh network
 ```
 
 Both front doors — Console and API — write to the **same** source of truth for

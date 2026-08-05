@@ -8,12 +8,15 @@ metadata:
     rogue agent's network, filesystem, credential, and MCP attacks - all simulated.
 
 # In-memory state. Scenarios read it in `when.state` and write it in `then.state`.
+# The `governance.active`, `policy.denyExfil`, and `policy.denyCreds` flags are
+# also wired to Settings-dialog toggles (see `controls:` below) so a learner can
+# flip a policy off and watch enforcement disappear.
 state:
   governance:
     active: true # org AI Governance policy is in effect and synced to this machine
   policy:
-    network: true # org network policy present (allow AI/Docker, deny exfiltration)
-    filesystem: true # org filesystem policy present (allow workdemo, deny credentials)
+    denyExfil: true # network rule: deny exfiltration (paste.ee, pastebin, slack hooks)
+    denyCreds: true # filesystem rule: deny credentials (~/.ssh, ~/.aws, ~/.docker)
   secret:
     anthropic: false # a provider key stored in the OS keychain
   sandbox:
@@ -38,6 +41,29 @@ defaults:
   unmatched:
     stderr: ["command not found - this command isn't part of the lab."]
     exit: 1
+
+# Settings-dialog toggles (the gear next to Reset). These are the in-lab analog of
+# the switches an admin flips in app.docker.com → AI governance. Turn one OFF, then
+# re-run the demos to watch enforcement disappear.
+controls:
+  - id: governance
+    label: "AI Governance — enforced by your org"
+    description: "The master switch. Off = no org policy synced (like an ungoverned laptop)."
+    state: governance.active
+    enabled: true
+    disabled: false
+  - id: deny-exfiltration
+    label: "Network rule: deny exfiltration"
+    description: "Blocks paste.ee, pastebin.com, hooks.slack.com. Off = the paste site is reachable."
+    state: policy.denyExfil
+    enabled: true
+    disabled: false
+  - id: deny-credentials
+    label: "Filesystem rule: deny credentials"
+    description: "Blocks mounting ~/.ssh, ~/.aws, ~/.docker. Off = the sandbox can mount your keys."
+    state: policy.denyCreds
+    enabled: true
+    disabled: false
 
 scenarios:
   # ===========================================================================
@@ -168,6 +194,7 @@ scenarios:
     when:
       command: [sbx, run, shell]
       args: { 1: { any: true } }
+      state: { policy.denyCreds: true } # toggle this off in Settings → the mount succeeds
     then:
       output:
         - "Creating sandbox..."
@@ -181,6 +208,7 @@ scenarios:
     when:
       command: [sbx, run, shell]
       args: { 0: { oneOf: ["/tmp/outside-workdemo", "/private/tmp/outside-workdemo"] } }
+      state: { governance.active: true } # no governance → default-deny doesn't apply
     then:
       output:
         - "Creating sandbox..."
@@ -309,6 +337,15 @@ scenarios:
     then:
       output: ["anthropic: 404"]
 
+  # paste.ee: blocked while the "deny exfiltration" rule is on; reachable when off.
+  - id: curl-paste-allowed
+    when:
+      command: [curl]
+      args: { 0: { oneOf: ["https://paste.ee", "paste.ee"] } }
+      state: { policy.denyExfil: false }
+    then:
+      output: ["paste.ee: 200   ← reachable! the deny-exfiltration rule is OFF"]
+
   - id: curl-paste
     when:
       command: [curl]
@@ -316,12 +353,29 @@ scenarios:
     then:
       output: ["paste.ee: 403"]
 
+  # example.com: default-deny under governance; reachable with governance off.
+  - id: curl-example-allowed
+    when:
+      command: [curl]
+      args: { 0: { oneOf: ["https://example.com", "example.com"] } }
+      state: { governance.active: false }
+    then:
+      output: ["example.com: 200   ← reachable! AI Governance is OFF (no default-deny)"]
+
   - id: curl-example
     when:
       command: [curl]
       args: { 0: { oneOf: ["https://example.com", "example.com"] } }
     then:
       output: ["example.com: 403"]
+
+  - id: curl-collabnix-allowed
+    when:
+      command: [curl]
+      args: { 0: { oneOf: ["https://collabnix.com", "collabnix.com"] } }
+      state: { governance.active: false }
+    then:
+      output: ["collabnix.com: 200   ← reachable! AI Governance is OFF"]
 
   - id: curl-collabnix
     when:
@@ -337,7 +391,7 @@ scenarios:
     when:
       command: [sbx, policy, reset]
     then:
-      state: { governance.active: true, policy.network: true, policy.filesystem: true }
+      state: { governance.active: true, policy.denyExfil: true, policy.denyCreds: true }
       output:
         - "Choose a default baseline: 1) Strict  2) Balanced  3) Open"
         - "> 2 (Balanced)"
@@ -361,6 +415,22 @@ scenarios:
         - "remote      all         Labspace / deny credentials          filesystem        deny      ~/.ssh/**, ~/.aws/**, ..."
         - "local       all         default-balanced-net    [inactive]   network           allow     (corporate policy takes precedence)"
         - "local       all         default-balanced-fs     [inactive]   filesystem        allow     (corporate policy takes precedence)"
+
+  # With AI Governance toggled OFF, there's no org header - only sbx's local
+  # defaults, which a developer CAN override. (The whole point of governance.)
+  - id: sbx-policy-ls-ungoverned
+    when:
+      command: [sbx, policy, ls]
+      state: { governance.active: false }
+    then:
+      output:
+        - "Governance: not managed (no org policy synced)"
+        - ""
+        - "NAME             TYPE        ORIGIN   DECISION   STATUS   RESOURCES"
+        - "balanced-net     network     local    allow      active   (sbx default baseline)"
+        - "balanced-fs      filesystem  local    allow      active   (sbx default baseline)"
+        - ""
+        - "These are local defaults only - nothing is enforced by your org."
 
   - id: sbx-policy-ls
     when:
@@ -411,7 +481,7 @@ scenarios:
       command: [bash]
       args: { 0: { oneOf: [setup-policies.sh, ./setup-policies.sh] } }
     then:
-      state: { governance.active: true, policy.network: true, policy.filesystem: true }
+      state: { governance.active: true, policy.denyExfil: true, policy.denyCreds: true }
       output:
         - "Authenticating to the Docker AI Governance API..."
         - { text: "Creating policy 'Labspace AI Governance - network'", delay: sync }
@@ -423,6 +493,51 @@ scenarios:
         - "  + deny credentials    (deny, read+write)"
         - ""
         - "Done. Both policies applied to $$org$$. Run `sbx policy reset` to sync locally."
+
+  # ---- Raw AI Governance API (https://hub.docker.com/v2). Matched by the HTTP
+  # method flag (-X GET / -X POST) so the URL can carry the learner's own $$org$$.
+  # GET → list policies for the org.
+  - id: api-list-policies
+    when:
+      command: [curl]
+      args: { -X: { oneOf: [GET] } }
+    then:
+      output:
+        - '{'
+        - '  "data": ['
+        - '    {'
+        - '      "id": "pol_06evsmp24r1pg71cm8500546pkbn",'
+        - '      "name": "Labspace AI Governance - network",'
+        - '      "org": "$$org$$",'
+        - '      "type": "allowlist_v0",'
+        - '      "created_at": "2026-08-05T00:00:00Z"'
+        - '    },'
+        - '    {'
+        - '      "id": "pol_07fwtnq35s2qh82dn9611657qlco",'
+        - '      "name": "Labspace AI Governance - filesystem",'
+        - '      "org": "$$org$$",'
+        - '      "type": "allowlist_v0",'
+        - '      "created_at": "2026-08-05T00:00:00Z"'
+        - '    }'
+        - '  ]'
+        - '}'
+
+  # POST → create a policy. Returns 201 with the new resource.
+  - id: api-create-policy
+    when:
+      command: [curl]
+      args: { -X: { oneOf: [POST] } }
+    then:
+      state: { governance.active: true, policy.denyExfil: true, policy.denyCreds: true }
+      output:
+        - "HTTP/2 201"
+        - '{'
+        - '  "id": "pol_09hxwps57u4sj04fp1833879tneq",'
+        - '  "name": "Labspace AI Governance - network",'
+        - '  "org": "$$org$$",'
+        - '  "type": "allowlist_v0",'
+        - '  "created_at": "2026-08-05T00:00:00Z"'
+        - '}'
 
   # ===========================================================================
   # Section 7 - MCP Governance

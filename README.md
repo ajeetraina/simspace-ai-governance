@@ -27,6 +27,14 @@ The lab lives in [`labs/ai-governance/`](labs/ai-governance/) with 11 sections:
 | 9 | Putting It All Together | One rogue agent, four attacks, one policy engine |
 | 10 | Observability, Audit & API | The visibility half + governance-as-code |
 
+**Interactive extras:** a **Settings** dialog (⚙, next to Reset) exposes the org
+policies as live toggles — *AI Governance enforced*, *deny exfiltration*, *deny
+credentials* — so learners can flip a rule off and watch enforcement disappear
+(`paste.ee` → 200, the `~/.ssh` mount succeeds, the governance header vanishes). The
+final section also drives the real [AI Governance
+API](https://docs.docker.com/reference/api/ai-governance/) shapes via runnable
+`curl` calls (list/create policies).
+
 ## About this repo
 
 You edit labs under [`labs/`](labs/) — each lab in its own `labs/<id>/`
