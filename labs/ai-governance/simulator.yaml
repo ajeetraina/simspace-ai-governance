@@ -47,7 +47,7 @@ scenarios:
     when:
       command: [sbx, version]
     then:
-      output: ["sbx version: v0.37.1 a1b9f3c2e7d84056bb21c0f9e4d7a8c3b6e05f12"]
+      output: ["sbx version: v0.38.0-rc1-57-gde89a8dd6 de89a8dd67fc899f48b3d547b4790021918de7e2"]
 
   - id: sbx-login
     when:
