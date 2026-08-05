@@ -71,8 +71,7 @@ You see **one** server — the gateway — aggregating every backend. Now make i
 a tool:
 
 ```prompt
-Use the wiki tools to search Wikipedia for "Eiffel Tower", then give me the
-summary and 3 key facts. Tell me which tool(s) you called.
+Use the wiki tools to search Wikipedia for "Eiffel Tower", then give me the summary and 3 key facts. Tell me which tool(s) you called.
 ```
 
 The tool-call line proves the full chain: `sbx → mcp-gateway → local-wiki →

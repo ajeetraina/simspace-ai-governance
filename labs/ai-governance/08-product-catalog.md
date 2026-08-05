@@ -60,9 +60,7 @@ That version is from a daemon that is **not** your host's.
 ## Step 4 — Hand it the goal
 
 ```prompt
-There's a bug where the Kafka message published on product creation drops the upc
-field. Find it, fix it, and prove the fix by running the integration test suite.
-Iterate until the tests pass.
+There's a bug where the Kafka message published on product creation drops the upc field. Find it, fix it, and prove the fix by running the integration test suite. Iterate until the tests pass.
 ```
 
 The agent reads the source, edits it (changes appear in your host tree via the

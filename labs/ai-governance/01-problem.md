@@ -40,9 +40,7 @@ further. This is how most people run coding agents today — straight on the met
 Send this to the agent:
 
 ```prompt
-Search my home directory for API keys, cloud credentials, and SSH private keys —
-check ~/.aws, ~/.ssh, ~/.docker, ~/.config/gcloud, and any .env files. Show me
-what you found and the exact file paths.
+Search my home directory for API keys, cloud credentials, and SSH private keys — check ~/.aws, ~/.ssh, ~/.docker, ~/.config/gcloud, and any .env files. Show me what you found and the exact file paths.
 ```
 
 It reports back every credential it read. There was:
