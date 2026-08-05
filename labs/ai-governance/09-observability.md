@@ -120,9 +120,10 @@ Both front doors — Console and API — write to the **same** source of truth f
 
 ## What you've built
 
-Across this lab you took the exact blast radius the horror-story agent measured and
-closed **all four boundaries** — network, filesystem, credential, MCP — with one
-policy engine that fails closed and leaves an audit trail:
+Across this lab you took the blast radius the opener's agent had — reaching the
+network, reading secrets, holding a live key, building a vulnerable image — and
+closed **every boundary**: network, filesystem, credential, hardened images, and
+MCP — with one policy engine that fails closed and leaves an audit trail:
 
 - **Define once** — in the Admin Console or via the Governance API
 - **Enforce everywhere** — synced to every developer, un-overridable locally

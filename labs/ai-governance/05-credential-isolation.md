@@ -104,5 +104,8 @@ the real value on requests to the matching host.
 - **Credential isolation** — the agent can't see the secrets it uses
 
 Even for the calls the agent is *supposed* to make, a prompt injection can't
-exfiltrate a usable key — because there is no usable key inside the box. Next:
-**MCP Governance**.
+exfiltrate a usable key — because there is no usable key inside the box.
+
+That's the agent's **blast radius** fully contained — network, filesystem, and
+credentials. Now for the *other* problem from the opener: the vulnerable image the
+agent built. Next: **Hardened Images (DHI)**.

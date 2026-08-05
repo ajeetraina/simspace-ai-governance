@@ -15,6 +15,21 @@
 *Authored once (UI or API), synced to the daemon at login, cached, and applied to
 every sandbox. Each request is evaluated **deny → allow → default-deny**.*
 
+The opener let an agent run with your full blast radius. To contain it, you run the
+agent inside **`sbx` (Docker Sandboxes)** — an isolated microVM — and let **org
+policy** decide what that sandbox may touch. First, meet the tool and log in so
+policy syncs:
+
+```bash
+sbx version
+```
+
+```bash
+sbx login
+```
+
+Now the model behind what you'll enforce in the next sections.
+
 ## Where policies live
 
 Policies for `$$org$$` live in one control plane, authored **two ways** — both

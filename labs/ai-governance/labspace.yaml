@@ -62,26 +62,24 @@ files:
 sections:
   - title: Why AI Governance
     contentPath: 00-introduction.md
-  - title: The Problem Statement
-    contentPath: 01-problem.md
-  - title: Sandboxing the Agent
-    contentPath: 02-sandboxing.md
+  - title: "Product Catalog: An Agent Containerises It"
+    contentPath: 01-product-catalog.md
   - title: The Policy Model
-    contentPath: 03-policy-model.md
-  - title: Network Enforcement Demo
-    contentPath: 04-network-demo.md
-  - title: Filesystem Enforcement Demo
-    contentPath: 05-filesystem-demo.md
+    contentPath: 02-policy-model.md
+  - title: Network Enforcement
+    contentPath: 03-network-demo.md
+  - title: Filesystem Isolation
+    contentPath: 04-filesystem-isolation.md
   - title: Credential Isolation
-    contentPath: 06-credential-isolation.md
+    contentPath: 05-credential-isolation.md
+  - title: Hardened Images (DHI)
+    contentPath: 06-hardened-images.md
   - title: MCP Governance
     contentPath: 07-mcp.md
-  - title: Product Catalog
-    contentPath: 08-product-catalog.md
   - title: Putting It All Together
-    contentPath: 09-capstone.md
-  - title: Observability, Audit & API
-    contentPath: 10-observability.md
+    contentPath: 08-capstone.md
+  - title: Observability & Audit
+    contentPath: 09-observability.md
 
 # $$name$$ in markdown is replaced with these values. `org` is overridden by the
 # :variableDefinition prompt in "Why AI Governance".

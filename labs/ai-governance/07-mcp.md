@@ -148,4 +148,6 @@ sbx mcp rm local-wiki
   governed endpoint every tool call flows through.
 - The org's Cedar policy controls what's *invocable*, tool by tool, and audits it.
 
-Next: turn a real autonomous agent loose on a real app.
+You've now governed everything the agent touches — network, filesystem,
+credentials, the image it builds, and its tools. Next, watch one rogue agent try
+to break **all** of it at once: **Putting It All Together**.

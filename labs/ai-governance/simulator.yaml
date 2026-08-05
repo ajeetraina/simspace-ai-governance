@@ -27,7 +27,8 @@ state:
     attached: "" # server attached to the current agent run
   catalog:
     cloned: false
-    fixed: false
+    containerised: false # agent wrote a Dockerfile and built the image
+    hardened: false # agent switched to a Docker Hardened Image base
 
 settings:
   pace:
@@ -737,6 +738,50 @@ scenarios:
         - "● Done. Built catalog-service:latest in the sandbox's OWN Docker daemon."
         - "Next: scan it with `docker scout` to see what the base image dragged in."
 
+  # Remediation: the agent switches the base to a Docker Hardened Image and rebuilds.
+  - id: agent-harden
+    when:
+      agent: true
+      promptContains: [hardened]
+    then:
+      state: { catalog.hardened: true }
+      files:
+        - create: catalog-service-node/Dockerfile
+          content: |
+            # Rewritten by the agent - hardened, minimal base (Docker Hardened Image).
+            FROM dhi.io/node:20-hardened
+
+            WORKDIR /usr/src/app
+            COPY package*.json ./
+            RUN npm install --production
+            COPY . .
+
+            EXPOSE 3000
+            CMD ["node", "src/index.js"]
+      output:
+        - "● Swapping FROM node:20  →  FROM dhi.io/node:20-hardened (minimal, signed)."
+        - "● Rebuilding catalog-service:latest on the hardened base..."
+        - { text: "  [+] Building 5.4s  RUN npm install --production", delay: build }
+        - { text: "  => naming to docker.io/library/catalog-service:latest", delay: build }
+        - "● Done. Re-run `docker scout cves` - the CVE count collapses."
+
+  # Hardened image → almost nothing left to find.
+  - id: docker-scout-cves-hardened
+    when:
+      command: [docker, scout, cves]
+      state: { catalog.hardened: true }
+    then:
+      output:
+        - { text: "    ✓ Image stored for indexing", delay: short }
+        - { text: "    ✓ Indexed 96 packages", delay: scan }
+        - "    ✓ Detected 2 vulnerable packages with a total of 2 vulnerabilities"
+        - ""
+        - "  2 vulnerabilities found in 2 packages"
+        - "    CRITICAL  0     HIGH  0     MEDIUM  1     LOW  1"
+        - ""
+        - "The critical/high findings are gone - the hardened base ships only what the"
+        - "app needs and is patched upstream. Same app, a fraction of the attack surface."
+
   - id: docker-scout-cves
     when:
       command: [docker, scout, cves]
@@ -777,13 +822,14 @@ scenarios:
         - { text: "    ✓ Image stored for indexing", delay: short }
         - { text: "    ✓ Indexed 431 packages", delay: scan }
         - ""
-        - "  Target             │  catalog-service:latest  │    2C    12H    20M    13L"
-        - "    digest           │  6f2a9c3b1d40            │"
-        - "  Base image         │  node:20                 │    2C    11H    18M    11L"
-        - "  Updated base image │  node:20-slim            │    0C     2H     6M     4L"
-        - "                     │                          │   -2C    -9H   -14M    -7L"
+        - "  Target             │  catalog-service:latest   │    2C    12H    20M    13L"
+        - "    digest           │  6f2a9c3b1d40             │"
+        - "  Base image         │  node:20                  │    2C    11H    18M    11L"
+        - "  Recommended base   │  dhi.io/node:20-hardened  │    0C     0H     1M     1L"
+        - "                     │                           │   -2C   -11H   -17M   -10L"
         - ""
-        - "Run `docker scout cves catalog-service:latest` for the full list."
+        - "A Docker Hardened Image would remove nearly every finding. See the Hardened"
+        - "Images section. Run `docker scout cves catalog-service:latest` for the full list."
 
   - id: git-diff-containerised
     when:

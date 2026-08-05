@@ -11,21 +11,21 @@ It's a Simspace conversion of the
 workshop, condensed into a focused, self-contained narrative where every
 `sbx`/`curl`/`docker` command actually runs in the simulator.
 
-The lab lives in [`labs/ai-governance/`](labs/ai-governance/) with 11 sections:
+The lab lives in [`labs/ai-governance/`](labs/ai-governance/) with 10 sections that
+follow one arc — *an agent does real work, and you govern what it touches and ships*:
 
 | # | Section | What you do |
 | --- | --- | --- |
 | 0 | Why AI Governance | The three pillars; set your org |
-| 1 | The Problem Statement | Ask an unsandboxed agent (`claude -p`) to find your secrets |
-| 2 | Sandboxing the Agent | Run it in a sandbox — the secrets vanish |
-| 3 | The Policy Model | How org policy flows: deny → allow → default-deny |
-| 4 | Network Enforcement Demo | Three `curl`s, three outcomes (404 / 403 / 403) |
-| 5 | Filesystem Enforcement Demo | Denied mounts fail at sandbox creation |
-| 6 | Credential Isolation | The real key never enters the sandbox |
+| 1 | **Product Catalog** | **Start here** — an agent containerises a real app: the image is full of CVEs and it ran with your full access |
+| 2 | The Policy Model | How org policy flows: deny → allow → default-deny |
+| 3 | Network Enforcement | Three `curl`s, three outcomes (404 / 403 / 403) |
+| 4 | Filesystem Isolation | The agent can't read or mount your secrets (403 at creation) |
+| 5 | Credential Isolation | The real key never enters the sandbox |
+| 6 | Hardened Images (DHI) | Fix the opener's CVEs — swap the base, re-scan, they collapse |
 | 7 | MCP Governance | One governed gateway; gate tools with Cedar |
-| 8 | Product Catalog | A real autonomous agent containerises a real app and scans it for CVEs |
-| 9 | Putting It All Together | One rogue agent, four attacks, one policy engine |
-| 10 | Observability, Audit & API | The visibility half + governance-as-code |
+| 8 | Putting It All Together | One rogue agent, four attacks, one policy engine |
+| 9 | Observability & Audit | The visibility half + governance-as-code (the API) |
 
 **Interactive extras:** a **Settings** dialog (⚙, next to Reset) exposes the org
 policies as live toggles — *AI Governance enforced*, *deny exfiltration*, *deny
