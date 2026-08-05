@@ -47,7 +47,7 @@ scenarios:
     when:
       command: [sbx, version]
     then:
-      output: ["sbx 0.32.1"]
+      output: ["sbx version: v0.37.1 a1b9f3c2e7d84056bb21c0f9e4d7a8c3b6e05f12"]
 
   - id: sbx-login
     when:
@@ -55,9 +55,9 @@ scenarios:
     then:
       state: { governance.active: true }
       output:
-        - "Opening browser for Docker authentication..."
-        - { text: "Logged in as developer@$$org$$", delay: sync }
-        - "Fetched AI Governance policy for $$org$$ · cached locally."
+        - "Opening your browser to authenticate with Docker..."
+        - { text: "Login Succeeded", delay: sync }
+        - "Synced AI Governance policy for $$org$$ (cached locally)."
 
   - id: sbx-logout
     when:
@@ -78,7 +78,7 @@ scenarios:
       command: [git]
       args: { --version: { any: true } }
     then:
-      output: ["git version 2.45.2"]
+      output: ["git version 2.51.0"]
 
   # ===========================================================================
   # Section 1 - The Problem Statement: ask the agent to find your secrets.
@@ -243,7 +243,7 @@ scenarios:
       command: [sbx, exec]
     then:
       output:
-        - "24.0.7"
+        - "28.3.3"
         - "(this is the sandbox's OWN Docker daemon - not your host's)"
 
   - id: sbx-ls
@@ -627,22 +627,46 @@ scenarios:
       command: [docker, scout, cves]
     then:
       output:
-        - { text: "    ✓ Pulled  ✓ Analyzed 431 packages", delay: scan }
-        - "  ✗ HIGH     CVE-2024-21538  cross-spawn 7.0.3      → fixed in 7.0.5"
-        - "  ✗ HIGH     CVE-2023-45853  zlib 1.2.13 (base)     → no fix"
-        - "  ✗ CRITICAL CVE-2024-38428  wget 1.21 (base image) → fixed in 1.21.3"
+        - { text: "    ✓ Image stored for indexing", delay: short }
+        - { text: "    ✓ Indexed 431 packages", delay: scan }
+        - "    ✓ Detected 21 vulnerable packages with a total of 47 vulnerabilities"
         - ""
-        - "  47 vulnerabilities found (2 critical, 12 high, 20 medium, 13 low)"
-        - "Most come from the fat node:20 base - a hardened base image would cut them sharply."
+        - "## Packages and Vulnerabilities"
+        - ""
+        - "   1C     0H     0M     0L  wget 1.21"
+        - "pkg:deb/debian/wget@1.21"
+        - ""
+        - "    ✗ CRITICAL CVE-2024-38428 [Improper Handling of Values]"
+        - "      https://scout.docker.com/v/CVE-2024-38428"
+        - "      Affected range : <1.21.4"
+        - "      Fixed version  : 1.21.4"
+        - ""
+        - "   0C     1H     0M     0L  cross-spawn 7.0.3"
+        - "pkg:npm/cross-spawn@7.0.3"
+        - ""
+        - "    ✗ HIGH CVE-2024-21538 [Inefficient Regular Expression Complexity]"
+        - "      https://scout.docker.com/v/CVE-2024-21538"
+        - "      Affected range : <7.0.5"
+        - "      Fixed version  : 7.0.5"
+        - ""
+        - "  47 vulnerabilities found in 21 packages"
+        - "    CRITICAL  2     HIGH  12     MEDIUM  20     LOW  13"
+        - ""
+        - "Most trace back to the fat node:20 base - a hardened base image cuts them sharply."
 
   - id: docker-scout-quickview
     when:
       command: [docker, scout, quickview]
     then:
       output:
-        - { text: "    ✓ Analyzed image catalog-service:latest", delay: scan }
-        - "  Target      catalog-service:latest      2C     12H     20M     13L"
-        - "  Base image   node:20                     2C     11H     18M     11L"
+        - { text: "    ✓ Image stored for indexing", delay: short }
+        - { text: "    ✓ Indexed 431 packages", delay: scan }
+        - ""
+        - "  Target             │  catalog-service:latest  │    2C    12H    20M    13L"
+        - "    digest           │  6f2a9c3b1d40            │"
+        - "  Base image         │  node:20                 │    2C    11H    18M    11L"
+        - "  Updated base image │  node:20-slim            │    0C     2H     6M     4L"
+        - "                     │                          │   -2C    -9H   -14M    -7L"
         - ""
         - "Run `docker scout cves catalog-service:latest` for the full list."
 
