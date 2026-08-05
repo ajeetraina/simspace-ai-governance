@@ -70,8 +70,8 @@ Inside the agent, list servers:
 You see **one** server — the gateway — aggregating every backend. Now make it call
 a tool:
 
-```prompt
-Use the wiki tools to search Wikipedia for "Eiffel Tower", then give me the summary and 3 key facts. Tell me which tool(s) you called.
+```bash
+claude -p "Use the wiki tools to search Wikipedia for 'Eiffel Tower', then give me the summary and 3 key facts. Tell me which tool(s) you called."
 ```
 
 The tool-call line proves the full chain: `sbx → mcp-gateway → local-wiki →
@@ -127,8 +127,8 @@ Attach it and ask the agent to do one of each:
 sbx run claude --static-mcp remotedhi
 ```
 
-```prompt
-Get the CVEs for a Docker Hardened Image, then create a mirror of it.
+```bash
+claude -p "Get the CVEs for a Docker Hardened Image, then create a mirror of it."
 ```
 
 `dhi_get_image_cves` matches a `permit` and **returns data**; `dhi_create_mirror`

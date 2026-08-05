@@ -49,14 +49,14 @@ once here:
 
 | Section | What you'll do |
 | --- | --- |
-| The Problem Statement | Watch an unsandboxed agent read your secrets first-hand |
+| The Problem Statement | Ask an unsandboxed agent to find your secrets — it reads them all |
 | Sandboxing the Agent | Put the agent in an isolated sandbox — the secrets vanish |
 | The Policy Model | See how org policies flow to developer machines |
 | Network Enforcement Demo | Prove network policies enforce with three `curl`s |
 | Filesystem Enforcement Demo | Prove filesystem policies enforce at sandbox creation |
 | Credential Isolation | Prove the real API key never enters the sandbox |
 | MCP Governance | Register servers behind one governed gateway; gate tools with Cedar |
-| Product Catalog | Turn a real autonomous agent loose on a real app, contained by policy |
+| Product Catalog | A real autonomous agent containerises a real app and scans it for CVEs — contained by policy |
 | Putting It All Together | **The capstone** — stop one rogue agent's four attacks in one sandbox |
 | Observability, Audit & API | The visibility half, plus governance-as-code |
 

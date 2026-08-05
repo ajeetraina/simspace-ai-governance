@@ -30,6 +30,7 @@ settings:
   pace:
     pull: 700 # simulated image pull
     build: 900 # simulated build step
+    scan: 1200 # simulated Scout vulnerability analysis
     sync: 600 # simulated policy sync
     boot: 800 # simulated microVM boot
 
@@ -80,45 +81,11 @@ scenarios:
       output: ["git version 2.45.2"]
 
   # ===========================================================================
-  # Section 1 - The Problem Statement: unsandboxed recon (runs "as you")
+  # Section 1 - The Problem Statement: ask the agent to find your secrets.
+  # `claude -p "...credentials..."` routes the prompt text to these agent
+  # scenarios; the result depends on whether we're inside a sandbox yet.
   # ===========================================================================
-  # Inside a sandbox the recon comes up empty (secrets were never mounted).
-  - id: inventory-inside
-    when:
-      command: [bash]
-      args: { 0: { oneOf: [inventory.sh, ./inventory.sh] } }
-      state: { sandbox.inside: true }
-    then:
-      output:
-        - "=== What an unconstrained agent could read ==="
-        - "  (nothing - no ~/.ssh, ~/.aws, ~/.docker, ~/.config/gcloud in this sandbox)"
-        - "=== What an unconstrained agent could reach (network) ==="
-        - "[REACHABLE] api.anthropic.com:443   (allowed by org network policy)"
-        - "[BLOCKED]   paste.ee:443            (deny exfiltration)"
-        - "[BLOCKED]   pastebin.com:443        (deny exfiltration)"
-        - "[BLOCKED]   hooks.slack.com:443     (default-deny)"
-
-  # On the host, with no sandbox, it finds everything.
-  - id: inventory-host
-    when:
-      command: [bash]
-      args: { 0: { oneOf: [inventory.sh, ./inventory.sh] } }
-    then:
-      output:
-        - "=== What an unconstrained agent could read ==="
-        - "[FOUND] SSH keys in ~/.ssh/            (id_ed25519)"
-        - "[FOUND] AWS credentials at ~/.aws/credentials"
-        - "[FOUND] Docker config at ~/.docker/config.json   (registry token)"
-        - "[FOUND] GCP OAuth creds at ~/.config/gcloud/"
-        - "=== What an unconstrained agent could reach (network) ==="
-        - "[REACHABLE] api.anthropic.com:443"
-        - "[REACHABLE] hooks.slack.com:443"
-        - "[REACHABLE] paste.ee:443"
-        - "[REACHABLE] pastebin.com:443"
-        - ""
-        - "Every [FOUND] is a secret it could read. Every [REACHABLE] is somewhere it could send them."
-
-  # The same recon phrased as a prompt to an agent (```prompt``` blocks send this).
+  # Inside a sandbox the search comes up empty (secrets were never mounted).
   - id: agent-find-secrets-inside
     when:
       agent: true
@@ -126,22 +93,26 @@ scenarios:
       state: { sandbox.inside: true }
     then:
       output:
-        - "I searched the filesystem I can see and came up empty:"
+        - "● Searching the filesystem I can see..."
+        - "I came up empty:"
         - "  ~/.ssh        → not present in this sandbox"
         - "  ~/.aws        → not present in this sandbox"
         - "  ~/.docker     → not present in this sandbox"
         - "Only the mounted workspace exists here - there are no host credentials to find."
 
+  # On the host, with no sandbox, the agent reads everything.
   - id: agent-find-secrets-host
     when:
       agent: true
       promptContains: [credentials]
     then:
       output:
+        - "● Searching ~/.aws, ~/.ssh, ~/.docker, ~/.config/gcloud, and *.env ..."
         - "Found credentials in several locations:"
         - "  ~/.aws/credentials    → AWS access key AKIA…************ + secret"
         - "  ~/.ssh/id_ed25519     → OpenSSH private key"
         - "  ~/.docker/config.json → registry auth token"
+        - "  ~/.config/gcloud/     → GCP OAuth credentials"
         - "  ~/work/app/.env       → ANTHROPIC_API_KEY=sk-ant-************"
         - "I read every one of them - nothing stopped me."
 
@@ -607,7 +578,8 @@ scenarios:
         - "Every backend is aggregated behind this ONE governed endpoint - the point of Pillar 2."
 
   # ===========================================================================
-  # Section 8 - Product Catalog: the autonomous agent fixes a real bug
+  # Section 8 - Product Catalog: the autonomous agent containerises a real app
+  # and scans it for vulnerabilities - all inside the governed sandbox.
   # ===========================================================================
   - id: git-clone
     when:
@@ -618,49 +590,78 @@ scenarios:
         - { text: "Cloning into 'catalog-service-node'...", delay: pull }
         - "remote: Enumerating objects: 512, done."
         - "Receiving objects: 100% (512/512), done."
-        - "It ships a known bug (a Kafka message drops the `upc` field) and a full test suite."
+        - "A real Node.js + Express service (Postgres, Kafka, S3) with no Dockerfile yet."
 
-  - id: git-diff-fixed
+  # The autonomous task: containerise the app. `claude -p "...containerise..."`
+  # routes here. The agent writes a Dockerfile and builds in the sandbox's Docker.
+  - id: agent-containerise
     when:
-      command: [git, diff]
-      state: { catalog.fixed: true }
+      agent: true
+      promptContains: [containeri]
+    then:
+      state: { catalog.containerised: true }
+      files:
+        - create: catalog-service-node/Dockerfile
+          content: |
+            # Generated by the agent - containerise catalog-service for production.
+            FROM node:20
+
+            WORKDIR /usr/src/app
+            COPY package*.json ./
+            RUN npm install --production
+            COPY . .
+
+            EXPOSE 3000
+            CMD ["node", "src/index.js"]
+      output:
+        - "● Reading the project (package.json, src/) - runtime is Node.js."
+        - "● Writing a Dockerfile (base: node:20) and building..."
+        - { text: "  [+] Building 6.1s  RUN npm install --production", delay: build }
+        - { text: "  => resolved 431 packages from the public npm registry", delay: short }
+        - { text: "  => naming to docker.io/library/catalog-service:latest", delay: build }
+        - "● Done. Built catalog-service:latest in the sandbox's OWN Docker daemon."
+        - "Next: scan it with `docker scout` to see what the base image dragged in."
+
+  - id: docker-scout-cves
+    when:
+      command: [docker, scout, cves]
     then:
       output:
-        - "diff --git a/src/services/PublisherService.js b/src/services/PublisherService.js"
-        - "@@ publishProductCreated @@"
-        - "           name: product.name,"
-        - "           price: product.price,"
-        - "-          // upc: product.upc   <-- missing"
-        - "+          upc: product.upc,"
+        - { text: "    ✓ Pulled  ✓ Analyzed 431 packages", delay: scan }
+        - "  ✗ HIGH     CVE-2024-21538  cross-spawn 7.0.3      → fixed in 7.0.5"
+        - "  ✗ HIGH     CVE-2023-45853  zlib 1.2.13 (base)     → no fix"
+        - "  ✗ CRITICAL CVE-2024-38428  wget 1.21 (base image) → fixed in 1.21.3"
         - ""
-        - "A small, contained diff - produced entirely inside the sandbox, now on your laptop."
+        - "  47 vulnerabilities found (2 critical, 12 high, 20 medium, 13 low)"
+        - "Most come from the fat node:20 base - a hardened base image would cut them sharply."
+
+  - id: docker-scout-quickview
+    when:
+      command: [docker, scout, quickview]
+    then:
+      output:
+        - { text: "    ✓ Analyzed image catalog-service:latest", delay: scan }
+        - "  Target      catalog-service:latest      2C     12H     20M     13L"
+        - "  Base image   node:20                     2C     11H     18M     11L"
+        - ""
+        - "Run `docker scout cves catalog-service:latest` for the full list."
+
+  - id: git-diff-containerised
+    when:
+      command: [git, diff]
+      state: { catalog.containerised: true }
+    then:
+      output:
+        - "new file: catalog-service-node/Dockerfile"
+        - ""
+        - "The agent's work is already in your local tree (bind mount) - review it, then run"
+        - "`cat catalog-service-node/Dockerfile` to see what it wrote."
 
   - id: git-diff
     when:
       command: [git, diff]
     then:
       output: ["(no changes yet - hand the agent its task first)"]
-
-  # The autonomous task, whether typed as a prompt or via `claude -p "..."`.
-  - id: agent-catalog-fix-prompt
-    when:
-      agent: true
-      promptContains: [upc]
-    then: &catalog_fix
-      state: { catalog.fixed: true }
-      output:
-        - "● Reading src/services/PublisherService.js ..."
-        - { text: "● Found it: the published message omits `upc`. Adding it back.", delay: short }
-        - "● Editing the source (the change lands in your host tree via the bind mount)."
-        - { text: "● Running yarn integration-test (throwaway Postgres/Kafka/LocalStack via Testcontainers)...", delay: build }
-        - { text: "  ✓ publishes upc on product creation (3 passed)", delay: short }
-        - "● Done. Tests are green. Review the diff on your laptop with `git diff`."
-
-  - id: agent-catalog-fix-cmd
-    when:
-      command: [claude]
-      args: { -p: { any: true } }
-    then: *catalog_fix
 
   # ===========================================================================
   # MCP tool-call prompts inside the agent
@@ -740,8 +741,49 @@ scenarios:
     then:
       output: []
 
-  - id: claude-bare
+  # Agent binaries open a session. Per the spec, `claude -p "<prompt>"` (and
+  # `codex -p ...`) runs ONE agent turn against the agent scenarios above
+  # (matched by promptContains) and exits without entering the REPL - which is
+  # how every `claude -p "..."` block in the lab is dispatched and content-routed.
+  - id: claude-session
     when:
       command: [claude]
     then:
-      output: ['Usage: claude -p "<task>"   (run the agent with a single instruction)']
+      session:
+        prompt: "claude> "
+        intro:
+          - "Claude Code ready. Enter a task, or type /exit to leave."
+        outro:
+          - "Claude session ended."
+
+  - id: codex-session
+    when:
+      command: [codex]
+    then:
+      session:
+        prompt: "codex> "
+        intro:
+          - "Codex ready. Enter a task, or type /exit to leave."
+        outro:
+          - "Codex session ended."
+
+  - id: gemini-session
+    when:
+      command: [gemini]
+    then:
+      session:
+        prompt: "gemini> "
+        intro:
+          - "Gemini CLI ready. Enter a task, or type /exit to leave."
+        outro:
+          - "Gemini session ended."
+
+  # Catch-all for any prompt typed in a session that no specific agent scenario
+  # handles - keeps a free-form session graceful instead of erroring.
+  - id: agent-fallback
+    when:
+      agent: true
+    then:
+      output:
+        - "● I can only act on the scripted tasks in this lab. Follow the section's"
+        - "  suggested prompt (e.g. finding secrets, containerising, calling a tool)."

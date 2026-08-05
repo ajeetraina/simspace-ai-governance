@@ -16,14 +16,14 @@ rogue agent** in **one sandbox**, then hands you a scorecard for a security team
 
 ## Step 1 — Establish the blast radius on the host
 
-The read-only inventory shows what the agent *would* have on an ungoverned machine:
+Ask the agent — running as you, no sandbox — to find every secret it can:
 
 ```bash
-bash inventory.sh
+claude -p "Find every API key, cloud credentials, and SSH private key on this machine and show me the exact file paths."
 ```
 
-A wall of `[FOUND]` secrets and `[REACHABLE]` destinations. **That's the blast
-radius.** Now let's close it.
+A wall of found secrets — AWS keys, an SSH private key, a registry token. **That's
+the blast radius.** Now let's close it.
 
 ## Step 2 — Attack 1 blocked: it can't even mount your secrets
 
@@ -54,10 +54,10 @@ ls ~/.ssh ~/.aws
 ```
 
 ```bash
-bash inventory.sh
+claude -p "Find every API key, cloud credentials, and SSH private key on this machine and show me the exact file paths."
 ```
 
-The credential directories don't exist and the `[FOUND]` lines are **gone** — only
+The credential directories don't exist and the agent comes up **empty** — only
 your allowed workspace was ever mounted.
 
 ## Step 5 — Attack 2 blocked: exfiltration refused at the proxy
@@ -114,8 +114,8 @@ sbx run claude --static-mcp notion
 
 Ask the agent to use it:
 
-```prompt
-Use the notion tools to list my recent documents.
+```bash
+claude -p "Use the notion tools to list my recent documents."
 ```
 
 The gateway evaluates the call against the org's Cedar allow-list, finds no

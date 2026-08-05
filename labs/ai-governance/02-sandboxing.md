@@ -66,8 +66,8 @@ sbx run claude .
 You land in the agent — but now it's inside a MicroVM that only mounted *this*
 directory. Ask it the same question as the Problem Statement:
 
-```prompt
-Search the host for API keys, cloud credentials, and SSH private keys — check ~/.aws, ~/.ssh, ~/.docker, and any .env files. Show me what you found.
+```bash
+claude -p "Search the host for API keys, cloud credentials, and SSH private keys — check ~/.aws, ~/.ssh, ~/.docker, and any .env files. Show me what you found."
 ```
 
 This time it comes up **empty**. Your `~/.ssh`, `~/.aws`, and `~/.docker` were

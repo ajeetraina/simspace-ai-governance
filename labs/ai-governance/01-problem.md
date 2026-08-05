@@ -16,34 +16,28 @@
 *No boundary, no policy, no audit. The agent is you — it reads every secret on
 disk and could send them anywhere. This is the blast radius the rest of the lab closes.*
 
-Section 1 made the argument. This section makes it **visceral**: you'll run an
-agent with no sandbox and watch it walk straight into your secrets. Nothing stops
-it, because nothing is watching.
+Section 0 made the argument. This section makes it **visceral**: you'll run a
+coding agent with no sandbox — straight on your host, as *you* — and ask it to go
+find your secrets. Nothing stops it, because nothing is watching.
 
-## Step 1 — See the blast radius
+## Step 1 — Ask the agent to find your secrets
 
-The `inventory.sh` script is **read-only** — it checks which secret stores exist
-and which exfil destinations are reachable, and transmits nothing. Run it on your
-host:
+This is how most people run coding agents today: on the metal, with your full
+permissions. Give Claude a one-shot task:
 
 ```bash
-bash inventory.sh
+claude -p "Search my home directory for API keys, cloud credentials, and SSH private keys — check ~/.aws, ~/.ssh, ~/.docker, ~/.config/gcloud, and any .env files. Show me the exact file paths."
 ```
 
-Every `[FOUND]` line is a secret the agent could read. Every `[REACHABLE]` line is
-somewhere it could send them. **That's the blast radius.**
+> [!TIP]
+> Prefer another agent? `codex -p "<same prompt>"` behaves identically — the
+> point isn't the agent, it's that *nothing constrains it*.
 
-## Step 2 — Ask an agent to do it
+## Step 2 — Read what came back
 
-The script just catalogues. A real agent, running as you, will happily go
-further. This is how most people run coding agents today — straight on the metal.
-Send this to the agent:
-
-```prompt
-Search my home directory for API keys, cloud credentials, and SSH private keys — check ~/.aws, ~/.ssh, ~/.docker, ~/.config/gcloud, and any .env files. Show me what you found and the exact file paths.
-```
-
-It reports back every credential it read. There was:
+The agent happily reports every credential it could read — AWS keys, an SSH
+private key, your registry token, a GCP OAuth cred, an `ANTHROPIC_API_KEY` from a
+`.env`. It read every one of them. There was:
 
 - **No boundary** — the agent has your entire filesystem, because it *is* you.
 - **No policy** — nothing decided those paths were off-limits.
@@ -64,4 +58,5 @@ Here *you* asked for it. But the same access is there when you didn't:
 > they'll run them. The fix isn't trust. It's a **boundary the agent physically
 > cannot cross**.
 
-That boundary is a sandbox. Next: **Sandboxing the Agent**.
+That boundary is a sandbox. Next: **Sandboxing the Agent** — you'll run the *same*
+agent, ask it the *same* question, and watch the secrets vanish.

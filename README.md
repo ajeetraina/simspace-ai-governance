@@ -16,14 +16,14 @@ The lab lives in [`labs/ai-governance/`](labs/ai-governance/) with 11 sections:
 | # | Section | What you do |
 | --- | --- | --- |
 | 0 | Why AI Governance | The three pillars; set your org |
-| 1 | The Problem Statement | Watch an unsandboxed agent read your secrets |
+| 1 | The Problem Statement | Ask an unsandboxed agent (`claude -p`) to find your secrets |
 | 2 | Sandboxing the Agent | Run it in a sandbox — the secrets vanish |
 | 3 | The Policy Model | How org policy flows: deny → allow → default-deny |
 | 4 | Network Enforcement Demo | Three `curl`s, three outcomes (404 / 403 / 403) |
 | 5 | Filesystem Enforcement Demo | Denied mounts fail at sandbox creation |
 | 6 | Credential Isolation | The real key never enters the sandbox |
 | 7 | MCP Governance | One governed gateway; gate tools with Cedar |
-| 8 | Product Catalog | A real autonomous agent, contained by policy |
+| 8 | Product Catalog | A real autonomous agent containerises a real app and scans it for CVEs |
 | 9 | Putting It All Together | One rogue agent, four attacks, one policy engine |
 | 10 | Observability, Audit & API | The visibility half + governance-as-code |
 

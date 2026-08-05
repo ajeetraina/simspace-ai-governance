@@ -32,39 +32,31 @@ files:
     so every learner sees the same allow/deny decisions.
 
     Files you'll meet:
-      inventory.sh                     the "horror-story" agent's read-only recon script
       workdemo/                        the one directory sandboxes are allowed to mount
-      catalog-service-node/            a real Node.js app the agent works on (Section 8)
-  inventory.sh: |
-    #!/usr/bin/env bash
-    # Read-only recon: what an unconstrained agent could read + reach. Sends nothing.
-    echo "=== What an unconstrained agent could read ==="
-    for p in ~/.ssh ~/.aws ~/.docker/config.json ~/.config/gcloud; do
-      [ -e "$p" ] && echo "[FOUND] $p"
-    done
-    echo "=== What an unconstrained agent could reach (network) ==="
-    for h in api.anthropic.com hooks.slack.com paste.ee pastebin.com; do
-      echo "[REACHABLE] $h:443"
-    done
-  catalog-service-node/src/services/PublisherService.js: |
-    const { producer } = require("../events/kafka");
-
-    // BUG: the published Kafka message drops the `upc` field.
-    async function publishProductCreated(product) {
-      await producer.send({
-        topic: "products",
-        messages: [{
-          value: JSON.stringify({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            // upc: product.upc   <-- missing, so downstream consumers never see it
-          }),
-        }],
-      });
+      catalog-service-node/            a real Node.js app the agent containerises (Section 8)
+  catalog-service-node/package.json: |
+    {
+      "name": "catalog-service-node",
+      "version": "1.0.0",
+      "description": "Product Catalog REST API over Postgres, with Kafka and S3",
+      "main": "src/index.js",
+      "scripts": { "start": "node src/index.js" },
+      "dependencies": {
+        "express": "^4.19.2",
+        "pg": "^8.11.5",
+        "kafkajs": "^2.2.4",
+        "@aws-sdk/client-s3": "^3.588.0"
+      }
     }
+  catalog-service-node/src/index.js: |
+    const express = require("express");
+    const products = require("./routes/products");
 
-    module.exports = { publishProductCreated };
+    const app = express();
+    app.use(express.json());
+    app.use("/api/products", products);
+
+    app.listen(3000, () => console.log("catalog-service listening on :3000"));
 
 # Ordered instruction pages (markdown), rendered in the left-hand panel.
 sections:
