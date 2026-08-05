@@ -1,9 +1,33 @@
-# My Simspace labs
+# Docker AI Governance — Simspace lab
 
-Interactive, fully in-browser labs built on
-[Simspace](https://github.com/dockersamples/simspace). Everything in the terminal
-is simulated — no real Docker, backend, or network — so it runs the same for
-everyone, with nothing to install.
+An interactive, fully in-browser lab that proves how **Docker AI Governance**
+policies flow from an org's Admin Console to every developer's sandbox — stopping a
+rogue agent's **network, filesystem, credential, and MCP** attacks with one policy
+engine. Everything in the terminal is simulated — no real Docker, `sbx` daemon, or
+network — so it runs the same for everyone, with nothing to install.
+
+It's a Simspace conversion of the
+[labspace-docker-ai-governance](https://github.com/ajeetraina/labspace-docker-ai-governance)
+workshop, condensed into a focused, self-contained narrative where every
+`sbx`/`curl`/`docker` command actually runs in the simulator.
+
+The lab lives in [`labs/ai-governance/`](labs/ai-governance/) with 11 sections:
+
+| # | Section | What you do |
+| --- | --- | --- |
+| 0 | Why AI Governance | The three pillars; set your org |
+| 1 | The Problem Statement | Watch an unsandboxed agent read your secrets |
+| 2 | Sandboxing the Agent | Run it in a sandbox — the secrets vanish |
+| 3 | The Policy Model | How org policy flows: deny → allow → default-deny |
+| 4 | Network Enforcement Demo | Three `curl`s, three outcomes (404 / 403 / 403) |
+| 5 | Filesystem Enforcement Demo | Denied mounts fail at sandbox creation |
+| 6 | Credential Isolation | The real key never enters the sandbox |
+| 7 | MCP Governance | One governed gateway; gate tools with Cedar |
+| 8 | Product Catalog | A real autonomous agent, contained by policy |
+| 9 | Putting It All Together | One rogue agent, four attacks, one policy engine |
+| 10 | Observability, Audit & API | The visibility half + governance-as-code |
+
+## About this repo
 
 You edit labs under [`labs/`](labs/) — each lab in its own `labs/<id>/`
 directory. The app that runs them is a prebuilt image, and labs are loaded at

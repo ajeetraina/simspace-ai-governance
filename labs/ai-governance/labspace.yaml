@@ -1,0 +1,97 @@
+title: "Docker AI Governance"
+description: >
+  Define once, enforce everywhere. A hands-on, fully simulated lab that proves how
+  Docker AI Governance policies flow from the Admin Console to every developer's
+  sandbox - stopping a rogue agent's network, filesystem, credential, and MCP
+  attacks with one policy engine. Nothing to install; it runs the same for everyone.
+
+# Optional catalog card. Only shown on the landing page when this repo has two or
+# more labs. labs.json is GENERATED from this block - never edit labs.json by hand.
+catalog:
+  icon: shield_lock
+  tags: ["ai governance", "security", "sandbox", "mcp"]
+  estimatedMinutes: 60
+
+# Command behaviour lives in simulator.yaml (relative to this file).
+simulator: simulator.yaml
+
+# One terminal - the developer's host shell, with `sbx` ready to use.
+terminals:
+  - id: host
+    title: Terminal
+    icon: terminal
+
+# Seed the virtual filesystem. Built-in `ls`/`cat` reflect these immediately;
+# scenarios and save-as blocks add more on top.
+files:
+  README.md: |
+    # Docker AI Governance - lab workspace
+
+    This is your host home directory in the simulated lab. Everything the
+    terminal does here is scripted - no real Docker, sbx daemon, or network -
+    so every learner sees the same allow/deny decisions.
+
+    Files you'll meet:
+      inventory.sh                     the "horror-story" agent's read-only recon script
+      workdemo/                        the one directory sandboxes are allowed to mount
+      catalog-service-node/            a real Node.js app the agent works on (Section 8)
+  inventory.sh: |
+    #!/usr/bin/env bash
+    # Read-only recon: what an unconstrained agent could read + reach. Sends nothing.
+    echo "=== What an unconstrained agent could read ==="
+    for p in ~/.ssh ~/.aws ~/.docker/config.json ~/.config/gcloud; do
+      [ -e "$p" ] && echo "[FOUND] $p"
+    done
+    echo "=== What an unconstrained agent could reach (network) ==="
+    for h in api.anthropic.com hooks.slack.com paste.ee pastebin.com; do
+      echo "[REACHABLE] $h:443"
+    done
+  catalog-service-node/src/services/PublisherService.js: |
+    const { producer } = require("../events/kafka");
+
+    // BUG: the published Kafka message drops the `upc` field.
+    async function publishProductCreated(product) {
+      await producer.send({
+        topic: "products",
+        messages: [{
+          value: JSON.stringify({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            // upc: product.upc   <-- missing, so downstream consumers never see it
+          }),
+        }],
+      });
+    }
+
+    module.exports = { publishProductCreated };
+
+# Ordered instruction pages (markdown), rendered in the left-hand panel.
+sections:
+  - title: Why AI Governance
+    contentPath: 00-introduction.md
+  - title: The Problem Statement
+    contentPath: 01-problem.md
+  - title: Sandboxing the Agent
+    contentPath: 02-sandboxing.md
+  - title: The Policy Model
+    contentPath: 03-policy-model.md
+  - title: Network Enforcement Demo
+    contentPath: 04-network-demo.md
+  - title: Filesystem Enforcement Demo
+    contentPath: 05-filesystem-demo.md
+  - title: Credential Isolation
+    contentPath: 06-credential-isolation.md
+  - title: MCP Governance
+    contentPath: 07-mcp.md
+  - title: Product Catalog
+    contentPath: 08-product-catalog.md
+  - title: Putting It All Together
+    contentPath: 09-capstone.md
+  - title: Observability, Audit & API
+    contentPath: 10-observability.md
+
+# $$name$$ in markdown is replaced with these values. `org` is overridden by the
+# :variableDefinition prompt in "Why AI Governance".
+variables:
+  org: your-org
