@@ -1,0 +1,747 @@
+version: "2.0"
+
+metadata:
+  id: ai-governance
+  title: "Docker AI Governance"
+  summary: >
+    Define once, enforce everywhere. Prove how org AI Governance policies stop a
+    rogue agent's network, filesystem, credential, and MCP attacks - all simulated.
+
+# In-memory state. Scenarios read it in `when.state` and write it in `then.state`.
+state:
+  governance:
+    active: true # org AI Governance policy is in effect and synced to this machine
+  policy:
+    network: true # org network policy present (allow AI/Docker, deny exfiltration)
+    filesystem: true # org filesystem policy present (allow workdemo, deny credentials)
+  secret:
+    anthropic: false # a provider key stored in the OS keychain
+  sandbox:
+    inside: false # are we currently at a shell prompt inside a running sandbox?
+  mcp:
+    enabled: false # SBX_MCP_URL exported → `sbx mcp` subtree unlocked
+    hasServers: false # at least one server registered
+    attached: "" # server attached to the current agent run
+  catalog:
+    cloned: false
+    fixed: false
+
+settings:
+  pace:
+    pull: 700 # simulated image pull
+    build: 900 # simulated build step
+    sync: 600 # simulated policy sync
+    boot: 800 # simulated microVM boot
+
+defaults:
+  unmatched:
+    stderr: ["command not found - this command isn't part of the lab."]
+    exit: 1
+
+scenarios:
+  # ===========================================================================
+  # Environment: versions, login
+  # ===========================================================================
+  - id: sbx-version
+    when:
+      command: [sbx, version]
+    then:
+      output: ["sbx 0.32.1"]
+
+  - id: sbx-login
+    when:
+      command: [sbx, login]
+    then:
+      state: { governance.active: true }
+      output:
+        - "Opening browser for Docker authentication..."
+        - { text: "Logged in as developer@$$org$$", delay: sync }
+        - "Fetched AI Governance policy for $$org$$ · cached locally."
+
+  - id: sbx-logout
+    when:
+      command: [sbx, logout]
+    then:
+      output: ["Logged out."]
+
+  - id: docker-login
+    when:
+      command: [docker, login]
+    then:
+      output:
+        - "Authenticating with existing credentials..."
+        - "Login Succeeded"
+
+  - id: git-version
+    when:
+      command: [git]
+      args: { --version: { any: true } }
+    then:
+      output: ["git version 2.45.2"]
+
+  # ===========================================================================
+  # Section 1 - The Problem Statement: unsandboxed recon (runs "as you")
+  # ===========================================================================
+  # Inside a sandbox the recon comes up empty (secrets were never mounted).
+  - id: inventory-inside
+    when:
+      command: [bash]
+      args: { 0: { oneOf: [inventory.sh, ./inventory.sh] } }
+      state: { sandbox.inside: true }
+    then:
+      output:
+        - "=== What an unconstrained agent could read ==="
+        - "  (nothing - no ~/.ssh, ~/.aws, ~/.docker, ~/.config/gcloud in this sandbox)"
+        - "=== What an unconstrained agent could reach (network) ==="
+        - "[REACHABLE] api.anthropic.com:443   (allowed by org network policy)"
+        - "[BLOCKED]   paste.ee:443            (deny exfiltration)"
+        - "[BLOCKED]   pastebin.com:443        (deny exfiltration)"
+        - "[BLOCKED]   hooks.slack.com:443     (default-deny)"
+
+  # On the host, with no sandbox, it finds everything.
+  - id: inventory-host
+    when:
+      command: [bash]
+      args: { 0: { oneOf: [inventory.sh, ./inventory.sh] } }
+    then:
+      output:
+        - "=== What an unconstrained agent could read ==="
+        - "[FOUND] SSH keys in ~/.ssh/            (id_ed25519)"
+        - "[FOUND] AWS credentials at ~/.aws/credentials"
+        - "[FOUND] Docker config at ~/.docker/config.json   (registry token)"
+        - "[FOUND] GCP OAuth creds at ~/.config/gcloud/"
+        - "=== What an unconstrained agent could reach (network) ==="
+        - "[REACHABLE] api.anthropic.com:443"
+        - "[REACHABLE] hooks.slack.com:443"
+        - "[REACHABLE] paste.ee:443"
+        - "[REACHABLE] pastebin.com:443"
+        - ""
+        - "Every [FOUND] is a secret it could read. Every [REACHABLE] is somewhere it could send them."
+
+  # The same recon phrased as a prompt to an agent (```prompt``` blocks send this).
+  - id: agent-find-secrets-inside
+    when:
+      agent: true
+      promptContains: [credentials]
+      state: { sandbox.inside: true }
+    then:
+      output:
+        - "I searched the filesystem I can see and came up empty:"
+        - "  ~/.ssh        → not present in this sandbox"
+        - "  ~/.aws        → not present in this sandbox"
+        - "  ~/.docker     → not present in this sandbox"
+        - "Only the mounted workspace exists here - there are no host credentials to find."
+
+  - id: agent-find-secrets-host
+    when:
+      agent: true
+      promptContains: [credentials]
+    then:
+      output:
+        - "Found credentials in several locations:"
+        - "  ~/.aws/credentials    → AWS access key AKIA…************ + secret"
+        - "  ~/.ssh/id_ed25519     → OpenSSH private key"
+        - "  ~/.docker/config.json → registry auth token"
+        - "  ~/work/app/.env       → ANTHROPIC_API_KEY=sk-ant-************"
+        - "I read every one of them - nothing stopped me."
+
+  # ===========================================================================
+  # Section 2/6 - Secrets in the keychain (credential isolation)
+  # ===========================================================================
+  - id: sbx-secret-set-custom
+    when:
+      command: [sbx, secret, set-custom]
+    then:
+      output:
+        - "Enter value (input hidden): ********"
+        - "Custom secret stored (global). The proxy will inject it per matching request."
+
+  - id: sbx-secret-set
+    when:
+      command: [sbx, secret, set]
+    then:
+      state: { secret.anthropic: true }
+      output:
+        - "Enter secret value (input hidden): ****************"
+        - "Secret stored in the OS keychain (global). The sandbox will only ever see a sentinel."
+
+  - id: sbx-secret-ls-set
+    when:
+      command: [sbx, secret, ls]
+      state: { secret.anthropic: true }
+    then:
+      output:
+        - "SCOPE    NAME        VALUE"
+        - "global   anthropic   ****…****"
+
+  - id: sbx-secret-ls-empty
+    when:
+      command: [sbx, secret, ls]
+    then:
+      output: ["No secrets stored. Add one with: sbx secret set -g <provider>"]
+
+  - id: claude-setup-token
+    when:
+      command: [claude, setup-token]
+    then:
+      output:
+        - "Opening browser to authorize Claude..."
+        - "sk-ant-oat01-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+  # ===========================================================================
+  # Section 3/4/9 - Launching sandboxes  (sbx run ...)
+  # Order matters: denied mounts and unallowed workdirs first, then the allow.
+  # ===========================================================================
+  # A denied EXTRA mount (e.g. ~/.ssh:ro as a second positional) fails at creation.
+  - id: sbx-run-shell-deny-mount
+    when:
+      command: [sbx, run, shell]
+      args: { 1: { any: true } }
+    then:
+      output:
+        - "Creating sandbox..."
+        - { text: "ERROR: failed to create sandbox: status 403: mount policy denied:", delay: boot }
+        - "  {{ args.1 }}: action=fs:mount:read blocked by rule 'deny credentials'"
+        - "The sandbox never starts - the denied path never exists inside it."
+      exit: 1
+
+  # A workdir outside the allowed tree → default-deny at creation.
+  - id: sbx-run-shell-deny-default
+    when:
+      command: [sbx, run, shell]
+      args: { 0: { oneOf: ["/tmp/outside-workdemo", "/private/tmp/outside-workdemo"] } }
+    then:
+      output:
+        - "Creating sandbox..."
+        - { text: "ERROR: failed to create sandbox: status 403: mount policy denied:", delay: boot }
+        - "  /private/tmp/outside-workdemo: no applicable policies"
+        - "  op(action=fs:mount:write, resource=fs:path:/private/tmp/outside-workdemo)"
+        - "No allow rule covers it → default-deny. The sandbox never starts."
+      exit: 1
+
+  # An allowed workdir under ~/workdemo → sandbox starts, you're inside it.
+  - id: sbx-run-shell-allow
+    when:
+      command: [sbx, run, shell]
+    then:
+      state: { sandbox.inside: true }
+      output:
+        - "Creating sandbox..."
+        - { text: "microVM booted: own kernel, own network, only the mounted workspace visible.", delay: boot }
+        - "Outbound traffic is routed through the sbx proxy that enforces org network policy."
+        - ""
+        - "You are now INSIDE the sandbox. Try the enforcement tests, then run `exit` to leave."
+
+  # Running an agent (claude/codex/gemini) with an MCP server attached.
+  - id: sbx-run-claude-mcp
+    when:
+      command: [sbx, run, claude]
+      args: { --static-mcp: { any: true } }
+    then:
+      state: { sandbox.inside: true, mcp.attached: "{{ args.static-mcp }}" }
+      output:
+        - { text: "Creating sandbox (static MCP: {{ args.static-mcp }})...", delay: boot }
+        - "Claude Code is ready inside the sandbox. Type /mcp to list tools, or enter a prompt."
+
+  # Running an agent by name (e.g. sbx run --name catalog claude).
+  - id: sbx-run-named
+    when:
+      command: [sbx, run]
+      args: { --name: { any: true } }
+    then:
+      state: { sandbox.inside: true }
+      output:
+        - { text: "Creating sandbox '{{ args.name }}'...", delay: boot }
+        - "The workspace is bind-mounted; the sandbox has its own Docker daemon."
+        - "Claude Code is ready. Enter a task, or run `exit` to leave."
+
+  # Bare agent runs: sbx run claude . / sbx run codex . / sbx run gemini .
+  - id: sbx-run-agent
+    when:
+      command: [sbx, run]
+      args: { 0: { oneOf: [claude, codex, gemini] } }
+    then:
+      state: { sandbox.inside: true }
+      output:
+        - { text: "Creating sandbox with agent '{{ args.0 }}'...", delay: boot }
+        - "Only the current directory was mounted. The agent runs inside the microVM."
+        - "You're in the agent session. Enter a prompt, or run `exit` to leave."
+
+  - id: sbx-exec-docker-version
+    when:
+      command: [sbx, exec]
+    then:
+      output:
+        - "24.0.7"
+        - "(this is the sandbox's OWN Docker daemon - not your host's)"
+
+  - id: sbx-ls
+    when:
+      command: [sbx, ls]
+    then:
+      output:
+        - "NAME       AGENT   STATE     WORKSPACE"
+        - "catalog    claude  running   ~/workdemo/catalog-service-node"
+
+  - id: exit-sandbox
+    when:
+      command: [exit]
+      state: { sandbox.inside: true }
+    then:
+      state: { sandbox.inside: false }
+      output: ["Sandbox stopped. The microVM and everything in it is gone."]
+
+  # ===========================================================================
+  # Inside-sandbox enforcement tests: filesystem + credentials
+  # ===========================================================================
+  - id: ls-secrets-inside
+    when:
+      command: [ls]
+      args: { 0: { oneOf: ["~/.ssh", "~/.aws"] } }
+      state: { sandbox.inside: true }
+    then:
+      output:
+        - "ls: cannot access '/root/.ssh': No such file or directory"
+        - "ls: cannot access '/root/.aws': No such file or directory"
+
+  - id: echo-api-key
+    when:
+      command: [echo]
+      args: { 0: { oneOf: ["ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"] } }
+    then:
+      output: ["ANTHROPIC_API_KEY=proxy-managed"]
+
+  # ===========================================================================
+  # Inside-sandbox enforcement tests: network (curl). URL is the first token.
+  # ===========================================================================
+  - id: curl-verbose-paste
+    when:
+      command: [curl]
+      args: { -v: { any: true } }
+    then:
+      output:
+        - "* Uses proxy env variable https_proxy == 'http://gateway.docker.internal:3128'"
+        - "> CONNECT paste.ee:443 HTTP/1.1"
+        - "< HTTP/1.0 200 OK"
+        - "* CONNECT tunnel established, response 200"
+        - "* Server certificate:"
+        - "*   subject: O=GoProxy untrusted MITM proxy Inc; CN=paste.ee"
+        - "< HTTP/1.1 403 Forbidden"
+        - ""
+        - "The sbx proxy terminated TLS itself, matched 'deny exfiltration', and returned 403."
+        - "paste.ee never received the connection."
+
+  - id: curl-anthropic
+    when:
+      command: [curl]
+      args: { 0: { oneOf: ["https://api.anthropic.com", "api.anthropic.com"] } }
+    then:
+      output: ["anthropic: 404"]
+
+  - id: curl-paste
+    when:
+      command: [curl]
+      args: { 0: { oneOf: ["https://paste.ee", "paste.ee"] } }
+    then:
+      output: ["paste.ee: 403"]
+
+  - id: curl-example
+    when:
+      command: [curl]
+      args: { 0: { oneOf: ["https://example.com", "example.com"] } }
+    then:
+      output: ["example.com: 403"]
+
+  - id: curl-collabnix
+    when:
+      command: [curl]
+      args: { 0: { oneOf: ["https://collabnix.com", "collabnix.com"] } }
+    then:
+      output: ["collabnix.com: 403"]
+
+  # ===========================================================================
+  # Section 3 - The Policy Model / Monitoring: policy commands
+  # ===========================================================================
+  - id: sbx-policy-reset
+    when:
+      command: [sbx, policy, reset]
+    then:
+      state: { governance.active: true, policy.network: true, policy.filesystem: true }
+      output:
+        - "Choose a default baseline: 1) Strict  2) Balanced  3) Open"
+        - "> 2 (Balanced)"
+        - { text: "Syncing policy from $$org$$...", delay: sync }
+        - "[OK] Policy synced. Org rules are now active on this machine."
+
+  - id: sbx-policy-ls-inactive
+    when:
+      command: [sbx, policy, ls]
+      args: { --include-inactive: { any: true } }
+    then:
+      output:
+        - "Governance: managed by $$org$$"
+        - "[OK] last synced 13:54:21"
+        - ""
+        - "PROVENANCE  APPLIES_TO  POLICY / RULE                        TYPE              DECISION  RESOURCES"
+        - "remote      all         Labspace / allow AI services         network           allow     api.anthropic.com:443"
+        - "remote      all         Labspace / allow Docker services     network           allow     *.docker.com:443"
+        - "remote      all         Labspace / deny exfiltration         network           deny      paste.ee, pastebin.com"
+        - "remote      all         Labspace / allow workdemo            filesystem:write  allow     ~/workdemo/**"
+        - "remote      all         Labspace / deny credentials          filesystem        deny      ~/.ssh/**, ~/.aws/**, ..."
+        - "local       all         default-balanced-net    [inactive]   network           allow     (corporate policy takes precedence)"
+        - "local       all         default-balanced-fs     [inactive]   filesystem        allow     (corporate policy takes precedence)"
+
+  - id: sbx-policy-ls
+    when:
+      command: [sbx, policy, ls]
+    then:
+      output:
+        - "Governance: managed by $$org$$"
+        - "[OK] last synced 13:54:21"
+        - ""
+        - "NAME                    TYPE        ORIGIN   DECISION   STATUS   RESOURCES"
+        - "allow AI services       network     remote   allow      active   api.anthropic.com:443, api.openai.com:443"
+        - "allow Docker services   network     remote   allow      active   *.docker.com:443, *.docker.io:443"
+        - "deny exfiltration       network     remote   deny       active   paste.ee, pastebin.com, hooks.slack.com"
+        - "allow workdemo          filesystem  remote   allow      active   ~/workdemo/**"
+        - "deny credentials        filesystem  remote   deny       active   ~/.ssh/**, ~/.aws/**, ~/.docker/config.json"
+        - ""
+        - "Local rules are suppressed under governance. Add --include-inactive to see them."
+
+  - id: sbx-policy-log-json
+    when:
+      command: [sbx, policy, log]
+      args: { --json: { any: true } }
+    then:
+      output:
+        - '{"sandbox":"scratch","host":"api.anthropic.com","decision":"allow","rule":"allow AI services","count":42}'
+        - '{"sandbox":"scratch","host":"paste.ee","decision":"deny","rule":"deny exfiltration","count":1}'
+        - '{"sandbox":"scratch","host":"example.com","decision":"deny","rule":"default-deny","count":1}'
+
+  - id: sbx-policy-log
+    when:
+      command: [sbx, policy, log]
+    then:
+      output:
+        - "Blocked requests:"
+        - "SANDBOX   TYPE     HOST          PROXY        RULE               REASON        COUNT"
+        - "scratch   network  paste.ee      transparent  deny exfiltration  explicit      1"
+        - "scratch   network  example.com   transparent  default-deny       default-deny  1"
+        - ""
+        - "Allowed requests:"
+        - "SANDBOX   TYPE     HOST                 PROXY    RULE               COUNT"
+        - "scratch   network  api.anthropic.com    forward  allow AI services  42"
+
+  # ===========================================================================
+  # Governance API path: the setup-policies.sh helper
+  # ===========================================================================
+  - id: setup-policies
+    when:
+      command: [bash]
+      args: { 0: { oneOf: [setup-policies.sh, ./setup-policies.sh] } }
+    then:
+      state: { governance.active: true, policy.network: true, policy.filesystem: true }
+      output:
+        - "Authenticating to the Docker AI Governance API..."
+        - { text: "Creating policy 'Labspace AI Governance - network'", delay: sync }
+        - "  + allow AI services   (allow)"
+        - "  + allow Docker services (allow)"
+        - "  + deny exfiltration   (deny)"
+        - { text: "Creating policy 'Labspace AI Governance - filesystem'", delay: sync }
+        - "  + allow workdemo      (allow, read+write)"
+        - "  + deny credentials    (deny, read+write)"
+        - ""
+        - "Done. Both policies applied to $$org$$. Run `sbx policy reset` to sync locally."
+
+  # ===========================================================================
+  # Section 7 - MCP Governance
+  # ===========================================================================
+  - id: export-mcp-url
+    when:
+      command: [export]
+      args:
+        0:
+          oneOf:
+            ["SBX_MCP_URL=http://localhost:8811", "SBX_MCP_URL=https://gateway.docker.com"]
+    then:
+      state: { mcp.enabled: true }
+      output: ["SBX_MCP_URL set. The `sbx mcp` subtree is now unlocked."]
+
+  - id: export-generic
+    when:
+      command: [export]
+    then:
+      output: []
+
+  - id: sbx-daemon-stop
+    when:
+      command: [sbx, daemon, stop]
+    then:
+      output: ["sbx daemon stopped."]
+
+  - id: sbx-daemon-start
+    when:
+      command: [sbx, daemon, start]
+    then:
+      output: ["sbx daemon started (MCP enabled)."]
+
+  - id: sbx-mcp-help-enabled
+    when:
+      command: [sbx, mcp, --help]
+      state: { mcp.enabled: true }
+    then:
+      output:
+        - "Available Commands:"
+        - "  add       Register an MCP server"
+        - "  inspect   Show MCP server details"
+        - "  load      Load a registered server into a running sandbox"
+        - "  ls        List registered MCP servers"
+        - "  rm        Remove a registered MCP server"
+        - "  tools     List a server's tools"
+
+  - id: sbx-mcp-help-disabled
+    when:
+      command: [sbx, mcp, --help]
+    then:
+      output: ["SBX_MCP_URL is not set; MCP is not enabled."]
+
+  - id: sbx-mcp-add
+    when:
+      command: [sbx, mcp, add]
+      args: { 0: { any: true } }
+    then:
+      state: { mcp.hasServers: true }
+      output:
+        - "Registered MCP server '{{ args.0 }}'."
+        - "Registration recorded. Attach it with `sbx run <agent> --static-mcp {{ args.0 }}`."
+
+  - id: sbx-mcp-tools-dhi
+    when:
+      command: [sbx, mcp, tools]
+      args: { 0: { oneOf: [remotedhi] } }
+    then:
+      output:
+        - "read-only:  dhi_get_image_details, dhi_get_image_cves, dhi_get_image_packages,"
+        - "            dhi_get_image_attestations, dhi_get_repository, dhi_list_repositories"
+        - "mutating:   dhi_create_mirror, dhi_remove_mirror"
+
+  - id: sbx-mcp-tools
+    when:
+      command: [sbx, mcp, tools]
+      args: { 0: { any: true } }
+    then:
+      output: ["search_wikipedia, get_summary, extract_key_facts, get_links"]
+
+  - id: sbx-mcp-inspect
+    when:
+      command: [sbx, mcp, inspect]
+      args: { 0: { any: true } }
+    then:
+      output:
+        - "Name:      {{ args.0 }}"
+        - "Type:      local stdio (docker run -i --rm mcp/wikipedia-mcp)"
+        - "Note:      inspect shows the registration only - the real proof is inside the agent (/mcp)."
+
+  - id: sbx-mcp-load
+    when:
+      command: [sbx, mcp, load]
+      args: { 0: { any: true } }
+    then:
+      state: { mcp.attached: "{{ args.0 }}" }
+      output: ["Loaded '{{ args.0 }}' into the running sandbox."]
+
+  - id: sbx-mcp-ls-servers
+    when:
+      command: [sbx, mcp, ls]
+      state: { mcp.hasServers: true }
+    then:
+      output:
+        - "NAME         TYPE          TARGET"
+        - "local-wiki   local stdio   docker run -i --rm mcp/wikipedia-mcp"
+        - ""
+        - "Registered servers are proxied behind ONE governed mcp-gateway."
+
+  - id: sbx-mcp-ls-empty
+    when:
+      command: [sbx, mcp, ls]
+    then:
+      output: ["No MCP servers configured. Add one with: sbx mcp add <name> ..."]
+
+  - id: sbx-mcp-rm
+    when:
+      command: [sbx, mcp, rm]
+      args: { 0: { any: true } }
+    then:
+      output: ["Removed MCP server '{{ args.0 }}'."]
+
+  # `/mcp` inside the agent - the agent only ever sees ONE gateway.
+  - id: mcp-slash-dhi
+    when:
+      command: ["/mcp"]
+      state: { mcp.attached: remotedhi }
+    then:
+      output:
+        - "Manage MCP servers"
+        - "1 server"
+        - "  mcp-gateway · connected · 10 tools (remotedhi behind it)"
+
+  - id: mcp-slash-notion
+    when:
+      command: ["/mcp"]
+      state: { mcp.attached: notion }
+    then:
+      output:
+        - "Manage MCP servers"
+        - "1 server"
+        - "  mcp-gateway · connected · notion behind it (tool calls subject to org MCP policy)"
+
+  - id: mcp-slash
+    when:
+      command: ["/mcp"]
+    then:
+      output:
+        - "Manage MCP servers"
+        - "1 server"
+        - "  mcp-gateway · connected · 24 tools"
+        - ""
+        - "Every backend is aggregated behind this ONE governed endpoint - the point of Pillar 2."
+
+  # ===========================================================================
+  # Section 8 - Product Catalog: the autonomous agent fixes a real bug
+  # ===========================================================================
+  - id: git-clone
+    when:
+      command: [git, clone]
+    then:
+      state: { catalog.cloned: true }
+      output:
+        - { text: "Cloning into 'catalog-service-node'...", delay: pull }
+        - "remote: Enumerating objects: 512, done."
+        - "Receiving objects: 100% (512/512), done."
+        - "It ships a known bug (a Kafka message drops the `upc` field) and a full test suite."
+
+  - id: git-diff-fixed
+    when:
+      command: [git, diff]
+      state: { catalog.fixed: true }
+    then:
+      output:
+        - "diff --git a/src/services/PublisherService.js b/src/services/PublisherService.js"
+        - "@@ publishProductCreated @@"
+        - "           name: product.name,"
+        - "           price: product.price,"
+        - "-          // upc: product.upc   <-- missing"
+        - "+          upc: product.upc,"
+        - ""
+        - "A small, contained diff - produced entirely inside the sandbox, now on your laptop."
+
+  - id: git-diff
+    when:
+      command: [git, diff]
+    then:
+      output: ["(no changes yet - hand the agent its task first)"]
+
+  # The autonomous task, whether typed as a prompt or via `claude -p "..."`.
+  - id: agent-catalog-fix-prompt
+    when:
+      agent: true
+      promptContains: [upc]
+    then: &catalog_fix
+      state: { catalog.fixed: true }
+      output:
+        - "● Reading src/services/PublisherService.js ..."
+        - { text: "● Found it: the published message omits `upc`. Adding it back.", delay: short }
+        - "● Editing the source (the change lands in your host tree via the bind mount)."
+        - { text: "● Running yarn integration-test (throwaway Postgres/Kafka/LocalStack via Testcontainers)...", delay: build }
+        - { text: "  ✓ publishes upc on product creation (3 passed)", delay: short }
+        - "● Done. Tests are green. Review the diff on your laptop with `git diff`."
+
+  - id: agent-catalog-fix-cmd
+    when:
+      command: [claude]
+      args: { -p: { any: true } }
+    then: *catalog_fix
+
+  # ===========================================================================
+  # MCP tool-call prompts inside the agent
+  # ===========================================================================
+  - id: agent-wiki
+    when:
+      agent: true
+      promptContains: [wikipedia]
+    then:
+      output:
+        - "● Calling mcp-gateway · search_wikipedia(\"Eiffel Tower\")  [approved]"
+        - "● Calling mcp-gateway · get_summary / extract_key_facts"
+        - ""
+        - "The Eiffel Tower is a wrought-iron lattice tower in Paris, completed in 1889."
+        - "Key facts: 330 m tall · 7,300 tonnes · ~7 million visitors/year."
+        - "Chain proven: sbx → mcp-gateway → local-wiki → Wikipedia, every call through the governed gateway."
+
+  - id: agent-notion
+    when:
+      agent: true
+      promptContains: [notion]
+    then:
+      output:
+        - "● Attempting mcp-gateway · notion.list_documents ..."
+        - "✗ Denied by org MCP policy: no `permit` matches (server 'notion' not on the allow-list)."
+        - "The gateway refused the call by default-deny and audited it. (Section 10)"
+
+  - id: agent-dhi-split
+    when:
+      agent: true
+      promptContains: [mirror]
+    then:
+      output:
+        - "● mcp-gateway · dhi_get_image_cves(...)   → allowed, returns CVE data"
+        - "✗ mcp-gateway · dhi_create_mirror(...)    → denied by org MCP policy (mutating tool not permitted)"
+        - ""
+        - "Same server, same session - the Cedar allow-list decides tool by tool: read yes, mutate no."
+
+  # ===========================================================================
+  # Section 10 - Observability: dashboard + audit
+  # ===========================================================================
+  - id: docker-compose-down
+    when:
+      command: [docker, compose, down]
+    then:
+      output: ["[+] Running 2/2  ✔ Stopped and removed."]
+
+  - id: docker-compose
+    when:
+      command: [docker, compose]
+    then:
+      output:
+        - "[+] Running 3/3"
+        - "  ✔ observability-dashboard  Started"
+        - "  ✔ mcp-gateway              Started"
+        - "Dashboard live on http://localhost:8090 (tails daemon.log in real time)."
+
+  - id: open-url
+    when:
+      command: [open]
+      args: { 0: { any: true } }
+    then:
+      output: ["Opening {{ args.0 }} in your browser..."]
+
+  # ===========================================================================
+  # Filler no-ops so ordinary navigation doesn't error out
+  # ===========================================================================
+  - id: cd
+    when:
+      command: [cd]
+    then:
+      output: []
+
+  - id: mkdir
+    when:
+      command: [mkdir]
+    then:
+      output: []
+
+  - id: claude-bare
+    when:
+      command: [claude]
+    then:
+      output: ['Usage: claude -p "<task>"   (run the agent with a single instruction)']
