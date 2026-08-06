@@ -16,13 +16,12 @@ they may invoke.
 
 ## The one concept: `SBX_MCP_URL` must point at a gateway
 
-`sbx mcp` is hidden until an env var enables it. Point it at a **real gateway** - a
-local one (`http://localhost:8811`) or Docker's hosted control plane
-(`https://gateway.docker.com`), **not** the public registry (a catalog, not a
-gateway).
+`sbx mcp` is hidden until an env var enables it. Point it at a **real gateway** -
+Docker's hosted control plane (`https://gateway.docker.com`), **not** the public
+registry (a catalog, not a gateway).
 
 ```bash
-export SBX_MCP_URL=http://localhost:8811
+export SBX_MCP_URL=https://gateway.docker.com
 ```
 
 ```bash
