@@ -11,12 +11,12 @@ every tool call is checked against the org's Cedar policy. That single governed
 endpoint is the whole point of Pillar 2.*
 
 The `sbx mcp` subcommand registers MCP servers, fronted by the **Docker MCP
-Gateway**, that your sandboxed agents can call — and the org governs *which* tools
+Gateway**, that your sandboxed agents can call - and the org governs *which* tools
 they may invoke.
 
 ## The one concept: `SBX_MCP_URL` must point at a gateway
 
-`sbx mcp` is hidden until an env var enables it. Point it at a **real gateway** — a
+`sbx mcp` is hidden until an env var enables it. Point it at a **real gateway** - a
 local one (`http://localhost:8811`) or Docker's hosted control plane
 (`https://gateway.docker.com`), **not** the public registry (a catalog, not a
 gateway).
@@ -35,7 +35,7 @@ Confirm the subtree unlocked:
 sbx mcp --help
 ```
 
-## Step 1 — Register a server
+## Step 1 - Register a server
 
 Register the Wikipedia MCP server as a **local stdio** container:
 
@@ -53,9 +53,9 @@ sbx mcp inspect local-wiki
 
 > [!WARNING]
 > **Local stdio servers run on the HOST**, with your full permissions. Use them
-> for development, not untrusted code — exactly the risk the gateway exists to govern.
+> for development, not untrusted code - exactly the risk the gateway exists to govern.
 
-## Step 2 — Attach it to a sandbox and verify inside the agent
+## Step 2 - Attach it to a sandbox and verify inside the agent
 
 ```bash
 sbx run claude --static-mcp local-wiki
@@ -67,7 +67,7 @@ Inside the agent, list servers:
 /mcp
 ```
 
-You see **one** server — the gateway — aggregating every backend. Now make it call
+You see **one** server - the gateway - aggregating every backend. Now make it call
 a tool:
 
 ```bash
@@ -77,10 +77,10 @@ claude -p "Use the wiki tools to search Wikipedia for 'Eiffel Tower', then give 
 The tool-call line proves the full chain: `sbx → mcp-gateway → local-wiki →
 Wikipedia`, every call through the governed gateway.
 
-## Govern it — an MCP access policy (admin)
+## Govern it - an MCP access policy (admin)
 
-Steps 1–2 were **developer-side**. The governance side is where an **org admin**
-decides which tools agents may call at all — authored once in Docker Hub
+Steps 1-2 were **developer-side**. The governance side is where an **org admin**
+decides which tools agents may call at all - authored once in Docker Hub
 (**AI governance → MCP policy**) as a **[Cedar](https://www.cedarpolicy.com/)**
 document, enforced at the gateway for everyone in `$$org$$`.
 
@@ -108,9 +108,9 @@ Any other `local-wiki` tool is denied and audited. The Cedar schema gates MCP at
 | `invokeTool` | a server tool call | whether a specific `(server, tool)` pair may run |
 | `invokePrimordial` | a gateway built-in | the gateway's own escape hatches (`mcp-exec`, `code-mode`) |
 
-## A read/write split — the DHI server
+## A read/write split - the DHI server
 
-Docker's Hardened Images server splits cleanly into read-only and mutating tools —
+Docker's Hardened Images server splits cleanly into read-only and mutating tools -
 the ideal shape for a real rule:
 
 ```bash
@@ -132,7 +132,7 @@ claude -p "Get the CVEs for a Docker Hardened Image, then create a mirror of it.
 ```
 
 `dhi_get_image_cves` matches a `permit` and **returns data**; `dhi_create_mirror`
-matches none and is **denied and audited**. Same server, same principal — the
+matches none and is **denied and audited**. Same server, same principal - the
 allow-list decides **tool by tool**.
 
 ## Clean up
@@ -144,10 +144,10 @@ sbx mcp rm local-wiki
 ## Recap
 
 - `sbx mcp` is gated behind `SBX_MCP_URL`, which must point at a **real gateway**.
-- Inside the agent, the gateway appears as one aggregated `mcp-gateway` — the
+- Inside the agent, the gateway appears as one aggregated `mcp-gateway` - the
   governed endpoint every tool call flows through.
 - The org's Cedar policy controls what's *invocable*, tool by tool, and audits it.
 
-You've now governed everything the agent touches — network, filesystem,
+You've now governed everything the agent touches - network, filesystem,
 credentials, the image it builds, and its tools. Next, watch one rogue agent try
 to break **all** of it at once: **Putting It All Together**.

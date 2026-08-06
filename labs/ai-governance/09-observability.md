@@ -7,27 +7,27 @@
 ```
 
 *Every decision the daemon makes is written as structured JSONL. This section reads
-it, watches it live, and ships it to a SIEM — the visibility half of the story —
+it, watches it live, and ships it to a SIEM - the visibility half of the story -
 then closes the loop with governance-as-code via the API.*
 
-## Part 1 — The traffic log
+## Part 1 - The traffic log
 
 `sbx policy ls` tells you the *rules*; `sbx policy log` tells you what they actually
-*did* — every host your sandboxes reached, split into blocked vs allowed, with counts:
+*did* - every host your sandboxes reached, split into blocked vs allowed, with counts:
 
 ```bash
 sbx policy log
 ```
 
 `api.anthropic.com` appears under **Allowed** via `forward`; `paste.ee` (matched
-`deny exfiltration`) and `example.com` (`default-deny`) under **Blocked** — each
+`deny exfiltration`) and `example.com` (`default-deny`) under **Blocked** - each
 attributed to the rule that decided it. For scripting, emit JSON:
 
 ```bash
 sbx policy log --json
 ```
 
-## Part 2 — The live dashboard
+## Part 2 - The live dashboard
 
 Every policy decision is also written to a structured `daemon.log` (JSONL). Start
 the observability kit, which tails it in real time:
@@ -40,7 +40,7 @@ docker compose --profile with-gateway up -d --build
 open http://localhost:8090
 ```
 
-Generate a few decisions and watch three rows appear live — an allow for
+Generate a few decisions and watch three rows appear live - an allow for
 `api.anthropic.com`, an explicit deny for a denylisted host, and an implicit
 (default-deny) block. Read the raw log directly with `jq` (reference):
 
@@ -51,11 +51,11 @@ jq -c 'select(.msg == "governance policy evaluation" and .allowed == false)' "$L
 
 > [!NOTE]
 > The raw `daemon.log` answers *what* was decided and *why*, but has **no user
-> identity** — user attribution is the job of `auditkit` (next).
+> identity** - user attribution is the job of `auditkit` (next).
 
-## Part 3 — SIEM-grade audit (`auditkit`)
+## Part 3 - SIEM-grade audit (`auditkit`)
 
-Docker AI Governance writes a separate, purpose-built audit log — one sealed JSONL
+Docker AI Governance writes a separate, purpose-built audit log - one sealed JSONL
 event per decision, **with the signed-in user, org, and session on every record**:
 
 ```json no-run-button
@@ -80,13 +80,13 @@ collect `*.jsonl`** (skip the half-written `.tmp`), and **retention is yours**.
 > Audit logging is a **paid** part of Docker AI Governance and only activates when
 > `$$org$$` enforces a centralized policy. No governance → no audit records.
 
-## Part 4 — Governance-as-code (the API)
+## Part 4 - Governance-as-code (the API)
 
 Everything you did in the Admin Console has an HTTP equivalent on the
 [**AI Governance API**](https://docs.docker.com/reference/api/ai-governance/)
-(`https://hub.docker.com/v2`) — ideal for version control, CI, and admin tooling.
+(`https://hub.docker.com/v2`) - ideal for version control, CI, and admin tooling.
 
-**Mint an admin token** (a short-lived JWT from a Personal Access Token) — a
+**Mint an admin token** (a short-lived JWT from a Personal Access Token) - a
 one-time, interactive step:
 
 ```bash no-run-button
@@ -95,13 +95,13 @@ curl -fsS -X POST https://hub.docker.com/v2/users/login \
   -d '{"username":"<you>","password":"<PAT>"}'   # → { "token": "..." }  → export TOKEN=...
 ```
 
-**List the org's policies** — every call is `Authorization: Bearer <token>`:
+**List the org's policies** - every call is `Authorization: Bearer <token>`:
 
 ```bash
 curl -X GET https://hub.docker.com/v2/orgs/$$org$$/governance/policies -H "Authorization: Bearer $TOKEN"
 ```
 
-**Create a policy** — POST returns `201` with the new resource:
+**Create a policy** - POST returns `201` with the new resource:
 
 ```bash
 curl -X POST https://hub.docker.com/v2/orgs/$$org$$/governance/policies -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{"name":"Labspace AI Governance - network","type":"allowlist_v0"}'
@@ -115,21 +115,21 @@ everything in one shot:
 bash setup-policies.sh network
 ```
 
-Both front doors — Console and API — write to the **same** source of truth for
+Both front doors - Console and API - write to the **same** source of truth for
 `$$org$$`. Pick whichever fits your workflow.
 
 ## What you've built
 
-Across this lab you took the blast radius the opener's agent had — reaching the
-network, reading secrets, holding a live key, building a vulnerable image — and
+Across this lab you took the blast radius the opener's agent had - reaching the
+network, reading secrets, holding a live key, building a vulnerable image - and
 closed **every boundary**: network, filesystem, credential, hardened images, and
-MCP — with one policy engine that fails closed and leaves an audit trail:
+MCP - with one policy engine that fails closed and leaves an audit trail:
 
-- **Define once** — in the Admin Console or via the Governance API
-- **Enforce everywhere** — synced to every developer, un-overridable locally
-- **See everything** — live dashboard, SIEM-ready `auditkit` with user attribution
+- **Define once** - in the Admin Console or via the Governance API
+- **Enforce everywhere** - synced to every developer, un-overridable locally
+- **See everything** - live dashboard, SIEM-ready `auditkit` with user attribution
 
-That's the defensible, end-to-end enforcement story — one you can now walk a
+That's the defensible, end-to-end enforcement story - one you can now walk a
 security team through. 🎉
 
 Learn more at [docker.com/products/ai-governance](https://www.docker.com/products/ai-governance/).

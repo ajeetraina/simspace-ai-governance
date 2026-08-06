@@ -1,7 +1,7 @@
 # Credential Isolation
 
 ```text no-run-button
-   MicroVM (sandbox)                     Host — sbx proxy                Service
+   MicroVM (sandbox)                     Host - sbx proxy                Service
    ANTHROPIC_API_KEY = proxy-managed ─▶  1 match destination → service   api.anthropic.com
    (sentinel only)                       2 read real key (keychain)      (sees real key)
                                          3 inject Authorization header ─────────▶
@@ -12,7 +12,7 @@
 injects it per request.*
 
 The filesystem demo blocked the agent from **reading** secrets off disk. But agents
-legitimately need credentials — `claude` has to call `api.anthropic.com`. So:
+legitimately need credentials - `claude` has to call `api.anthropic.com`. So:
 
 > *If the agent can't read my keys, how does it authenticate to services it's
 > allowed to use?*
@@ -26,7 +26,7 @@ A host-side proxy injects it per request; the sandbox sees only a sentinel.
 > sandbox runtime protection you configure **developer-side** with `sbx secret`,
 > the OS keychain, or OAuth. There's no Admin Console toggle for it.
 
-## Step 1 — See the sentinel inside a sandbox
+## Step 1 - See the sentinel inside a sandbox
 
 ```bash
 sbx run shell ~/workdemo/creds
@@ -38,10 +38,10 @@ Look at the credential the `claude` agent would use:
 echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
 ```
 
-The variable exists — tools expect it — but its value is `proxy-managed`, not a
+The variable exists - tools expect it - but its value is `proxy-managed`, not a
 real key. There is no live secret anywhere in the sandbox.
 
-## Step 2 — Watch the proxy inject the real credential
+## Step 2 - Watch the proxy inject the real credential
 
 Still inside, make a request to an allowed AI service:
 
@@ -61,13 +61,13 @@ sbx policy log
 
 The request to `api.anthropic.com` is logged as `forward` (allowed). The proxy
 matched the destination to the `anthropic` service, read your real key from the
-host, and injected the `Authorization` header — all without the key ever touching
+host, and injected the `Authorization` header - all without the key ever touching
 the sandbox.
 
-## Step 3 — Store the secret in the keychain (preferred)
+## Step 3 - Store the secret in the keychain (preferred)
 
 An env var works but sits in your shell history in plaintext. The hardened path
-stores it in the OS keychain instead — keychain secrets take precedence:
+stores it in the OS keychain instead - keychain secrets take precedence:
 
 ```bash
 sbx secret set -g anthropic
@@ -77,7 +77,7 @@ sbx secret set -g anthropic
 sbx secret ls
 ```
 
-## Step 4 — Custom secrets for your own APIs
+## Step 4 - Custom secrets for your own APIs
 
 For an internal API, declare a **custom secret** keyed to a host and env var:
 
@@ -99,13 +99,13 @@ the real value on requests to the matching host.
 
 ## The three sandbox protections together
 
-- **Network egress** — the agent can't reach unapproved destinations
-- **Filesystem access** — the agent can't mount unapproved paths
-- **Credential isolation** — the agent can't see the secrets it uses
+- **Network egress** - the agent can't reach unapproved destinations
+- **Filesystem access** - the agent can't mount unapproved paths
+- **Credential isolation** - the agent can't see the secrets it uses
 
 Even for the calls the agent is *supposed* to make, a prompt injection can't
-exfiltrate a usable key — because there is no usable key inside the box.
+exfiltrate a usable key - because there is no usable key inside the box.
 
-That's the agent's **blast radius** fully contained — network, filesystem, and
+That's the agent's **blast radius** fully contained - network, filesystem, and
 credentials. Now for the *other* problem from the opener: the vulnerable image the
 agent built. Next: **Hardened Images (DHI)**.

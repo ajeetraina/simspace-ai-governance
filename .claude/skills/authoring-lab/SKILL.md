@@ -1,21 +1,21 @@
 ---
 name: authoring-lab
-description: Author or edit this Simspace lab — add or change instruction sections (markdown), command behaviour (scenarios in simulator.yaml), terminals, controls, seed files, or CI. Use whenever creating lab content, wiring up a new command or agent prompt, or before committing lab changes.
+description: Author or edit this Simspace lab - add or change instruction sections (markdown), command behaviour (scenarios in simulator.yaml), terminals, controls, seed files, or CI. Use whenever creating lab content, wiring up a new command or agent prompt, or before committing lab changes.
 ---
 
 # Authoring a Simspace lab
 
 You are editing a **Simspace lab**: instructional markdown plus a deterministic,
 in-browser terminal simulator. Each lab lives in its own directory under `labs/`
-(`labs/<id>/`); you only edit files there. The `labs.json` catalog is generated —
+(`labs/<id>/`); you only edit files there. The `labs.json` catalog is generated -
 never edit it. Read [`AGENTS.md`](../../../AGENTS.md) for the full cheat-sheet and
 the link to the authoritative specs.
 
 ## The loop (do this every time)
 
 1. Edit files under `labs/<id>/`.
-2. Validate: `docker compose run --rm validate` — checks every lab and regenerates
-   labs.json (a PostToolUse hook also runs it after edits — fix anything it reports).
+2. Validate: `docker compose run --rm validate` - checks every lab and regenerates
+   labs.json (a PostToolUse hook also runs it after edits - fix anything it reports).
 3. Preview if useful: `docker compose up dev` → http://localhost:5173 (changes
    show on browser refresh).
 4. **Definition of done:** validation is green _and_, for anything non-trivial,
@@ -92,18 +92,18 @@ Common shapes (see `AGENTS.md` / specs for full detail):
 - **Agent session:** a scenario with `then.session` opens a REPL; lines typed
   there match `when.agent: true` scenarios via `prompt` / `promptContains`.
 - **Controls:** top-level `controls:` add Settings toggles that flip a state
-  value with no command — good for gating a scenario behind a policy.
+  value with no command - good for gating a scenario behind a policy.
 - **CI:** `then.ci` triggers a run from the `workflows:` catalog (needs the CI
   tab enabled in `labspace.yaml`). To let a run's outcome follow a setting,
   gate a step with `requires: <state.path>` (+ a `failure:` block) and omit
-  `conclusion` — the CI panel's **Re-run** button then re-evaluates it, so a
+  `conclusion` - the CI panel's **Re-run** button then re-evaluates it, so a
   learner fixes a failed run by toggling a control and re-running, not by
   pushing again.
 - **Pace slow-feeling output:** to keep a pull/build/scan from printing
-  instantly, make an `output` entry an object with a `delay:` — the wait before
+  instantly, make an `output` entry an object with a `delay:` - the wait before
   that line appears. `delay` is a raw ms count or a pace-profile name (built-ins
   `short`/`medium`/`long`, or define your own under `settings.pace`). An entry
-  with a `delay:` but no `text:` is a pure pause. It's cosmetic only — the output
+  with a `delay:` but no `text:` is a pure pause. It's cosmetic only - the output
   is unchanged, so the lab stays deterministic.
 
   ```yaml
@@ -124,19 +124,19 @@ Common shapes (see `AGENTS.md` / specs for full detail):
 - **Template capture names drop dashes:** a `--name` matcher is read as
   `{{ args.name }}`, positional `0:` as `{{ args.0 }}`. Only `equals`/`any`/`oneOf`
   matchers capture a value.
-- **First match wins** — a broad scenario above a specific one shadows it.
-- **`save-as` blocks are files, not commands** — don't expect them to match a
+- **First match wins** - a broad scenario above a specific one shadows it.
+- **`save-as` blocks are files, not commands** - don't expect them to match a
   scenario. Plain runnable blocks must have a matching scenario or built-in
   (`ls`/`cat`).
 - **`terminal-id=` and `when.terminal`** must reference a terminal `id` declared
   in `labspace.yaml`.
 
-When in doubt, run the validator — it names the file, scenario, and problem.
+When in doubt, run the validator - it names the file, scenario, and problem.
 
 ## Add another lab
 
 Create a sibling directory `labs/<new-id>/` with its own `labspace.yaml`,
 `simulator.yaml`, and section markdown, then run `validate`. The catalog picks it
-up automatically — with two or more labs the app shows a landing page; nothing
+up automatically - with two or more labs the app shows a landing page; nothing
 else to wire up. Give each lab card a look with the optional `catalog:` block in
 its `labspace.yaml` (see the labspace cheat-sheet in `AGENTS.md`).

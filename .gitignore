@@ -2,5 +2,5 @@
 *.local
 site/
 
-# Generated from labs/*/labspace.yaml — never commit it.
+# Generated from labs/*/labspace.yaml - never commit it.
 labs.json

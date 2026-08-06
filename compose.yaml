@@ -1,8 +1,8 @@
 # Authoring environment for your labs. Uses the prebuilt Simspace images and
-# mounts only your ./labs directory — you never need Node or the app source.
+# mounts only your ./labs directory - you never need Node or the app source.
 #
 #   docker compose up dev                 # live preview at http://localhost:5173
-#                                         #   (also starts pulse — see below)
+#                                         #   (also starts pulse - see below)
 #   docker compose run --rm validate      # validate labs + regenerate labs.json
 #
 # Pin the image tags to a released version for reproducible authoring, e.g.
@@ -22,7 +22,7 @@ services:
     volumes:
       - ./labs:/usr/local/app/public/labs
     # Bring pulse up alongside the preview so you get the FULL experience while
-    # authoring — live "who's here" presence, per-milestone counts, and the
+    # authoring - live "who's here" presence, per-milestone counts, and the
     # instructor insights dashboard. The app's bundled dev config already points
     # at http://localhost:8888, so it just works; opt a single lab out with
     # `tracking: false` in its labspace.yaml.
@@ -31,7 +31,7 @@ services:
 
   # Presence + analytics backend (the same `pulse` service the platform deploys),
   # published on :8888 where the app's dev config points. This is a DEV
-  # convenience only — in production you don't run pulse yourself; you set
+  # convenience only - in production you don't run pulse yourself; you set
   # `pulse-endpoint` in .github/workflows/deploy.yml so the published site talks
   # to your hosted backend. Delete this service (and the `depends_on` above) to
   # author without any tracking.
@@ -40,7 +40,7 @@ services:
     ports:
       - "8888:8888"
     environment:
-      # Enables the instructor dashboard at #/labs/<id>/insights — open it and
+      # Enables the instructor dashboard at #/labs/<id>/insights - open it and
       # enter this token. Any value works locally.
       STATS_TOKEN: "dev-token"
     volumes:

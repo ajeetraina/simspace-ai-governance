@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # PostToolUse hook: after an edit to a file under labs/, validate the labs and, if
 # anything's broken, feed the errors back to the agent (exit 2). Defensive by
-# design — it silently skips when the edit isn't a lab file or when Docker isn't
+# design - it silently skips when the edit isn't a lab file or when Docker isn't
 # around, so it never gets in the way. Delete the `hooks` block in
 # .claude/settings.json to turn it off.
 #
@@ -18,7 +18,7 @@ case "$path" in
   *) exit 0 ;;
 esac
 
-# Nothing to run against without Docker — skip rather than error.
+# Nothing to run against without Docker - skip rather than error.
 command -v docker >/dev/null 2>&1 || exit 0
 
 cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
@@ -26,7 +26,7 @@ cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
 if ! output="$(docker compose run --rm validate 2>&1)"; then
   printf '%s\n' "$output" >&2
   echo "" >&2
-  echo "Lab validation failed after editing $path — fix the issues above before finishing." >&2
+  echo "Lab validation failed after editing $path - fix the issues above before finishing." >&2
   exit 2
 fi
 

@@ -21,9 +21,9 @@ jobs:
     with:
       labs-dir: labs
       # Pin to a released version for stable labs, e.g. "1". "latest" tracks the
-      # newest runtime — convenient, but the app can change under you.
+      # newest runtime - convenient, but the app can change under you.
       runtime-tag: "latest"
-      # OPTIONAL — presence + analytics. Point this at your deployed `pulse`
+      # OPTIONAL - presence + analytics. Point this at your deployed `pulse`
       # backend to turn on live "who's here" presence and the instructor
       # insights dashboard for ALL labs. Opt a single lab out with
       # `tracking: false` in its labspace.yaml. Leave it commented to deploy

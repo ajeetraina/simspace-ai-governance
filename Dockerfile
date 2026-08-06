@@ -2,7 +2,7 @@
 
 # Build a self-contained image that serves THIS repo's labs. It bases on the
 # prebuilt Simspace runtime and swaps in your labs/ directory. Labs are loaded at
-# runtime, so there's no app rebuild — only the labs.json catalog is generated
+# runtime, so there's no app rebuild - only the labs.json catalog is generated
 # (with the authoring image) so the runtime knows what labs exist.
 #
 #   docker build -t my-lab .

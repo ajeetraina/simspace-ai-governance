@@ -12,6 +12,11 @@ metadata:
 # also wired to Settings-dialog toggles (see `controls:` below) so a learner can
 # flip a policy off and watch enforcement disappear.
 state:
+  # Learner's Docker Hub org. The markdown `{{ state.org }}` variable is a separate,
+  # markdown-only mechanism the engine does NOT see, so terminal output uses this
+  # state value instead (templated as {{ state.org }}). Defaults to match the
+  # `variables.org` default in labspace.yaml.
+  org: "your-org"
   governance:
     active: true # org AI Governance policy is in effect and synced to this machine
   policy:
@@ -48,7 +53,7 @@ defaults:
 # re-run the demos to watch enforcement disappear.
 controls:
   - id: governance
-    label: "AI Governance — enforced by your org"
+    label: "AI Governance - enforced by your org"
     description: "The master switch. Off = no org policy synced (like an ungoverned laptop)."
     state: governance.active
     enabled: true
@@ -84,7 +89,7 @@ scenarios:
       output:
         - "Opening your browser to authenticate with Docker..."
         - { text: "Login Succeeded", delay: sync }
-        - "Synced AI Governance policy for $$org$$ (cached locally)."
+        - "Synced AI Governance policy for {{ state.org }} (cached locally)."
 
   - id: sbx-logout
     when:
@@ -396,7 +401,7 @@ scenarios:
       output:
         - "Choose a default baseline: 1) Strict  2) Balanced  3) Open"
         - "> 2 (Balanced)"
-        - { text: "Syncing policy from $$org$$...", delay: sync }
+        - { text: "Syncing policy from {{ state.org }}...", delay: sync }
         - "[OK] Policy synced. Org rules are now active on this machine."
 
   - id: sbx-policy-ls-inactive
@@ -405,7 +410,7 @@ scenarios:
       args: { --include-inactive: { any: true } }
     then:
       output:
-        - "Governance: managed by $$org$$"
+        - "Governance: managed by {{ state.org }}"
         - "[OK] last synced 13:54:21"
         - ""
         - "PROVENANCE  APPLIES_TO  POLICY / RULE                        TYPE              DECISION  RESOURCES"
@@ -438,7 +443,7 @@ scenarios:
       command: [sbx, policy, ls]
     then:
       output:
-        - "Governance: managed by $$org$$"
+        - "Governance: managed by {{ state.org }}"
         - "[OK] last synced 13:54:21"
         - ""
         - "NAME                    TYPE        ORIGIN   DECISION   STATUS   RESOURCES"
@@ -493,10 +498,10 @@ scenarios:
         - "  + allow workdemo      (allow, read+write)"
         - "  + deny credentials    (deny, read+write)"
         - ""
-        - "Done. Both policies applied to $$org$$. Run `sbx policy reset` to sync locally."
+        - "Done. Both policies applied to {{ state.org }}. Run `sbx policy reset` to sync locally."
 
   # ---- Raw AI Governance API (https://hub.docker.com/v2). Matched by the HTTP
-  # method flag (-X GET / -X POST) so the URL can carry the learner's own $$org$$.
+  # method flag (-X GET / -X POST) so the URL can carry the learner's own {{ state.org }}.
   # GET → list policies for the org.
   - id: api-list-policies
     when:
@@ -509,14 +514,14 @@ scenarios:
         - '    {'
         - '      "id": "pol_06evsmp24r1pg71cm8500546pkbn",'
         - '      "name": "Labspace AI Governance - network",'
-        - '      "org": "$$org$$",'
+        - '      "org": "{{ state.org }}",'
         - '      "type": "allowlist_v0",'
         - '      "created_at": "2026-08-05T00:00:00Z"'
         - '    },'
         - '    {'
         - '      "id": "pol_07fwtnq35s2qh82dn9611657qlco",'
         - '      "name": "Labspace AI Governance - filesystem",'
-        - '      "org": "$$org$$",'
+        - '      "org": "{{ state.org }}",'
         - '      "type": "allowlist_v0",'
         - '      "created_at": "2026-08-05T00:00:00Z"'
         - '    }'
@@ -535,7 +540,7 @@ scenarios:
         - '{'
         - '  "id": "pol_09hxwps57u4sj04fp1833879tneq",'
         - '  "name": "Labspace AI Governance - network",'
-        - '  "org": "$$org$$",'
+        - '  "org": "{{ state.org }}",'
         - '  "type": "allowlist_v0",'
         - '  "created_at": "2026-08-05T00:00:00Z"'
         - '}'

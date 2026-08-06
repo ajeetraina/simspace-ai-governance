@@ -1,7 +1,7 @@
 name: Validate labs
 
 # Validates every lab on each pull request (and on demand) so a broken lab is
-# caught before it merges — not just at deploy time. Uses the prebuilt authoring
+# caught before it merges - not just at deploy time. Uses the prebuilt authoring
 # image, so there's nothing to install.
 
 on:
