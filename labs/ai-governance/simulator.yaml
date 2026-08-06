@@ -579,7 +579,8 @@ scenarios:
 
   - id: sbx-mcp-help-enabled
     when:
-      command: [sbx, mcp, --help]
+      command: [sbx, mcp]
+      args: { --help: true }
       state: { mcp.enabled: true }
     then:
       output:
@@ -593,7 +594,8 @@ scenarios:
 
   - id: sbx-mcp-help-disabled
     when:
-      command: [sbx, mcp, --help]
+      command: [sbx, mcp]
+      args: { --help: true }
     then:
       output: ["SBX_MCP_URL is not set; MCP is not enabled."]
 
