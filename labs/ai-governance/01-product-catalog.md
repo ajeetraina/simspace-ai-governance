@@ -28,17 +28,35 @@ git clone https://github.com/ajeetraina/product-catalog-demo-showcase
 Take a look at what the agent will work on:
 :filelink[package.json]{path="product-catalog-demo-showcase/package.json"}
 
+Get the lay of the land before you hand it off. Note there's **no `Dockerfile`
+and no Compose file** yet - this repo ships source only:
+
+```bash
+tree product-catalog-demo-showcase
+```
+
 ## Step 2 - Ask the agent to containerise it
 
 ```bash
-claude -p "Containerise this Node.js app for production: read package.json and src/, write a Dockerfile, and build the image as product-catalog:latest."
+claude -p "Containerise this Node.js app for production: read package.json and src/, write a Dockerfile and a Compose file, and build the image as product-catalog:latest."
 ```
 
-The agent reads the project, writes a `Dockerfile`, and builds the image. It works -
-nothing failed. Review what it wrote:
+The agent reads the project, writes a `Dockerfile` and a `compose.yaml`, and builds
+the image. It works - nothing failed. Run `tree` again and you'll see the two files
+it added to the once source-only repo:
+
+```bash
+tree product-catalog-demo-showcase
+```
+
+Review what it wrote:
 
 ```bash
 cat product-catalog-demo-showcase/Dockerfile
+```
+
+```bash
+cat product-catalog-demo-showcase/compose.yaml
 ```
 
 ## Step 3 - Scan what it built
