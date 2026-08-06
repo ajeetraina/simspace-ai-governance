@@ -1,7 +1,7 @@
 # Hardened Images (DHI)
 
 ```text no-run-button
-   catalog-service:latest              catalog-service:latest (rebuilt)
+   product-catalog:latest              product-catalog:latest (rebuilt)
    FROM node:20                        FROM dhi.io/node:20-hardened
      47 CVEs  (2C 12H 20M 13L)   ──▶     2 CVEs  (0C 0H 1M 1L)
      fat base, unused packages          minimal · signed · SBOM + SLSA provenance
@@ -19,7 +19,7 @@ an SBOM and SLSA provenance built in.
 ## Step 1 — Recall the damage
 
 ```bash
-docker scout cves catalog-service:latest
+docker scout cves product-catalog:latest
 ```
 
 Dozens of CVEs, most tagged `(base image)`. The app code is fine; the **base** is
@@ -28,19 +28,19 @@ the liability.
 ## Step 2 — Have the agent switch to a hardened base
 
 ```bash
-claude -p "Switch the Dockerfile to a Docker Hardened Image base (a hardened, minimal equivalent of node:20) and rebuild catalog-service:latest."
+claude -p "Switch the Dockerfile to a Docker Hardened Image base (a hardened, minimal equivalent of node:20) and rebuild product-catalog:latest."
 ```
 
 The agent rewrites the `FROM` line to a DHI base and rebuilds. See the change:
 
 ```bash
-cat catalog-service-node/Dockerfile
+cat product-catalog-demo-showcase/Dockerfile
 ```
 
 ## Step 3 — Re-scan
 
 ```bash
-docker scout cves catalog-service:latest
+docker scout cves product-catalog:latest
 ```
 
 The CVE count collapses — the critical and high findings are essentially gone,

@@ -32,31 +32,46 @@ files:
     so every learner sees the same allow/deny decisions.
 
     Files you'll meet:
-      workdemo/                        the one directory sandboxes are allowed to mount
-      catalog-service-node/            a real Node.js app the agent containerises (Section 8)
-  catalog-service-node/package.json: |
+      workdemo/                                 the one directory sandboxes are allowed to mount
+      product-catalog-demo-showcase/            a real Node.js app the agent containerises (Product Catalog section)
+  product-catalog-demo-showcase/package.json: |
     {
-      "name": "catalog-service-node",
+      "name": "container-supported-development",
       "version": "1.0.0",
-      "description": "Product Catalog REST API over Postgres, with Kafka and S3",
-      "main": "src/index.js",
-      "scripts": { "start": "node src/index.js" },
+      "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon --inspect src/index.js --ignore dev",
+        "test": "env-cmd --file .env.node -- jest --detectOpenHandles"
+      },
       "dependencies": {
-        "express": "^4.19.2",
-        "pg": "^8.11.5",
+        "@aws-sdk/client-s3": "^3.1030.0",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
         "kafkajs": "^2.2.4",
-        "@aws-sdk/client-s3": "^3.588.0"
-      }
+        "multer": "^2.1.1",
+        "node-fetch": "^2",
+        "pg": "^8.20.0"
+      },
+      "packageManager": "yarn@1.22.21"
     }
-  catalog-service-node/src/index.js: |
+  product-catalog-demo-showcase/src/index.js: |
+    require("dotenv").config();
+    const os = require("os");
     const express = require("express");
-    const products = require("./routes/products");
+    const ProductService = require("./services/ProductService");
+    const multer = require("multer");
 
     const app = express();
     app.use(express.json());
-    app.use("/api/products", products);
+    const upload = multer({ dest: os.tmpdir() });
 
-    app.listen(3000, () => console.log("catalog-service listening on :3000"));
+    app.get("/", (req, res) => res.send("Hello World!!!"));
+
+    app.get("/api/products", async (req, res) => {
+      res.json(await ProductService.getProducts());
+    });
+
+    app.listen(3000, () => console.log("Listening on port 3000"));
 
 # Ordered instruction pages (markdown), rendered in the left-hand panel.
 sections:
