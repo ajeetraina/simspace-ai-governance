@@ -137,7 +137,7 @@ allow-list decides **tool by tool**.
 ## Clean up
 
 ```bash
-sbx mcp rm local-wiki
+sbx mcp rm remotedhi
 ```
 
 ## Recap
