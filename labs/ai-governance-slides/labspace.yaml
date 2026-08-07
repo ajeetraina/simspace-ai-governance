@@ -1,31 +1,29 @@
-# A slide deck (kind: slides) - the "here's the idea" half of the AI Governance
-# workshop. The sibling `ai-governance` lab is the "now you try it" half. This
-# deck reuses that lab's simulator so the on-slide demos run the exact commands
-# learners will run themselves (see spec/slidedeck.md in dockersamples/simspace).
+# The company-standard "Docker AI Governance" workshop deck (the approved
+# MasterCopy PDF), presented in Simspace as full-bleed slides. Every page is a
+# full-bleed image so the branding/content matches the master exactly; at the
+# hands-on sections we splice in LIVE terminal demo slides that reuse the sibling
+# `ai-governance` lab's simulator (see spec/slidedeck.md in dockersamples/simspace).
 kind: slides
 title: "Docker AI Governance - Slides"
-description: "Start here. The 12-minute tour of AI Governance, with live, scripted demos - before you get hands-on in the lab."
+description: "The company AI Governance workshop deck, with live scripted demos spliced into the hands-on sections. Start here, then do the lab."
 
 # Landing-page card. `order: 1` puts the deck ahead of the lab, so it reads as
-# "watch the tour, then do the lab". labs.json is GENERATED from this block.
+# "watch the workshop, then do the lab". labs.json is GENERATED from this block.
 catalog:
   icon: slideshow
   order: 1
   tags: ["ai governance", "slides", "start here"]
-  estimatedMinutes: 12
+  estimatedMinutes: 90
 
-version: "1.0.0"
+version: "2.0.0"
 
-# Branded chrome, set once. `light` is the surface content slides start from;
-# title/section layouts pick their own darker surface (see each slide).
-theme: light
-brand:
-  eyebrow: "Docker AI Governance"
-  source: "DOCKER DEVELOPER PLATFORM · 2026"
+# Dark is the deck's default surface - it matches the company deck's deep-blue
+# slides, so the native live-demo slides sit seamlessly among the image slides.
+theme: dark
 
-# Reuse the SIBLING LAB's simulator so demos here run the same scripted commands
-# the learners run in the lab - the two can't drift apart. State is NOT shared:
-# this deck gets its own fresh machine (spec/slidedeck.md §7.2).
+# Reuse the SIBLING LAB's simulator so the spliced-in demos run the exact scripted
+# commands the learners run in the lab - the two can't drift apart. State is NOT
+# shared: this deck gets its own fresh machine (spec/slidedeck.md §7.2).
 simulator: ../ai-governance/simulator.yaml
 
 # One demo terminal. The lab's scenarios aren't terminal-scoped, so any id fires
@@ -35,25 +33,12 @@ terminals:
     title: Demo
     icon: terminal
 
-# `slides:` is the deck alias for `sections:`. Each file is one chapter; slides
-# within a file are split on lines of exactly `---`.
+# `slides:` is the deck alias for `sections:`. One chapter holds the whole deck;
+# slides within it are split on lines of exactly `---`. Each company page is a
+# full-bleed <img>; six live-demo slides are interleaved at the hands-on sections.
 slides:
-  - title: Opening
-    contentPath: 00-opening.md
-  - title: The Agent
-    contentPath: 01-the-agent.md
-  - title: The Policy Model
-    contentPath: 02-policy-model.md
-  - title: Enforcement
-    contentPath: 03-enforcement.md
-  - title: Hardened Images
-    contentPath: 04-hardened-images.md
-  - title: MCP Governance
-    contentPath: 05-mcp.md
-  - title: The Capstone
-    contentPath: 06-capstone.md
-  - title: Observability
-    contentPath: 07-observability.md
+  - title: Workshop
+    contentPath: deck.md
 
 # $$org$$ substitution in slide markdown.
 variables:
