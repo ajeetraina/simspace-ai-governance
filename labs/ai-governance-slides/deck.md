@@ -1,276 +1,276 @@
 <!-- chrome: false -->
 
-<img src="assets/slide-01.jpg" alt="Slide 1" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-01.webp" alt="Slide 1" width="1366" height="769" loading="eager" fetchpriority="high" decoding="sync" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-02.jpg" alt="Slide 2" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-02.webp" alt="Slide 2" width="1366" height="769" loading="eager" fetchpriority="high" decoding="sync" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-03.jpg" alt="Slide 3" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-03.webp" alt="Slide 3" width="1366" height="769" loading="eager" fetchpriority="high" decoding="sync" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-04.jpg" alt="Slide 4" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-04.webp" alt="Slide 4" width="1366" height="769" loading="eager" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-05.jpg" alt="Slide 5" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-05.webp" alt="Slide 5" width="1366" height="769" loading="eager" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-06.jpg" alt="Slide 6" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-06.webp" alt="Slide 6" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-07.jpg" alt="Slide 7" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-07.webp" alt="Slide 7" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-08.jpg" alt="Slide 8" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-08.webp" alt="Slide 8" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-09.jpg" alt="Slide 9" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-09.webp" alt="Slide 9" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-10.jpg" alt="Slide 10" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-10.webp" alt="Slide 10" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-11.jpg" alt="Slide 11" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-11.webp" alt="Slide 11" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-12.jpg" alt="Slide 12" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-12.webp" alt="Slide 12" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-13.jpg" alt="Slide 13" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-13.webp" alt="Slide 13" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-14.jpg" alt="Slide 14" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-14.webp" alt="Slide 14" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-15.jpg" alt="Slide 15" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-15.webp" alt="Slide 15" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-16.jpg" alt="Slide 16" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-16.webp" alt="Slide 16" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-17.jpg" alt="Slide 17" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-17.webp" alt="Slide 17" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-18.jpg" alt="Slide 18" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-18.webp" alt="Slide 18" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-19.jpg" alt="Slide 19" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-19.webp" alt="Slide 19" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-20.jpg" alt="Slide 20" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-20.webp" alt="Slide 20" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-21.jpg" alt="Slide 21" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-21.webp" alt="Slide 21" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-22.jpg" alt="Slide 22" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-22.webp" alt="Slide 22" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-23.jpg" alt="Slide 23" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-23.webp" alt="Slide 23" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-24.jpg" alt="Slide 24" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-24.webp" alt="Slide 24" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-25.jpg" alt="Slide 25" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-25.webp" alt="Slide 25" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-26.jpg" alt="Slide 26" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-26.webp" alt="Slide 26" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-27.jpg" alt="Slide 27" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-27.webp" alt="Slide 27" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-28.jpg" alt="Slide 28" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-28.webp" alt="Slide 28" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-29.jpg" alt="Slide 29" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-29.webp" alt="Slide 29" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-30.jpg" alt="Slide 30" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-30.webp" alt="Slide 30" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-31.jpg" alt="Slide 31" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-31.webp" alt="Slide 31" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-32.jpg" alt="Slide 32" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-32.webp" alt="Slide 32" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-33.jpg" alt="Slide 33" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-33.webp" alt="Slide 33" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-34.jpg" alt="Slide 34" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-34.webp" alt="Slide 34" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-35.jpg" alt="Slide 35" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-35.webp" alt="Slide 35" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-36.jpg" alt="Slide 36" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-36.webp" alt="Slide 36" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-37.jpg" alt="Slide 37" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-37.webp" alt="Slide 37" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-38.jpg" alt="Slide 38" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-38.webp" alt="Slide 38" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-39.jpg" alt="Slide 39" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-39.webp" alt="Slide 39" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-40.jpg" alt="Slide 40" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-40.webp" alt="Slide 40" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-41.jpg" alt="Slide 41" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-41.webp" alt="Slide 41" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-42.jpg" alt="Slide 42" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-42.webp" alt="Slide 42" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-43.jpg" alt="Slide 43" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-43.webp" alt="Slide 43" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-44.jpg" alt="Slide 44" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-44.webp" alt="Slide 44" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-45.jpg" alt="Slide 45" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-45.webp" alt="Slide 45" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-46.jpg" alt="Slide 46" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-46.webp" alt="Slide 46" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
@@ -296,37 +296,37 @@ sbx policy ls
 
 <!-- chrome: false -->
 
-<img src="assets/slide-47.jpg" alt="Slide 47" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-47.webp" alt="Slide 47" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-48.jpg" alt="Slide 48" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-48.webp" alt="Slide 48" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-49.jpg" alt="Slide 49" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-49.webp" alt="Slide 49" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-50.jpg" alt="Slide 50" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-50.webp" alt="Slide 50" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-51.jpg" alt="Slide 51" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-51.webp" alt="Slide 51" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-52.jpg" alt="Slide 52" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-52.webp" alt="Slide 52" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
@@ -352,31 +352,31 @@ exit
 
 <!-- chrome: false -->
 
-<img src="assets/slide-53.jpg" alt="Slide 53" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-53.webp" alt="Slide 53" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-54.jpg" alt="Slide 54" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-54.webp" alt="Slide 54" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-55.jpg" alt="Slide 55" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-55.webp" alt="Slide 55" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-56.jpg" alt="Slide 56" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-56.webp" alt="Slide 56" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-57.jpg" alt="Slide 57" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-57.webp" alt="Slide 57" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
@@ -402,25 +402,25 @@ curl https://example.com -sS -o /dev/null -w "example.com: %{http_code}\n"
 
 <!-- chrome: false -->
 
-<img src="assets/slide-58.jpg" alt="Slide 58" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-58.webp" alt="Slide 58" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-59.jpg" alt="Slide 59" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-59.webp" alt="Slide 59" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-60.jpg" alt="Slide 60" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-60.webp" alt="Slide 60" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-61.jpg" alt="Slide 61" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-61.webp" alt="Slide 61" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
@@ -444,43 +444,43 @@ sbx run shell ~/workdemo/test-2 ~/.ssh:ro
 
 <!-- chrome: false -->
 
-<img src="assets/slide-62.jpg" alt="Slide 62" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-62.webp" alt="Slide 62" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-63.jpg" alt="Slide 63" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-63.webp" alt="Slide 63" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-64.jpg" alt="Slide 64" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-64.webp" alt="Slide 64" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-65.jpg" alt="Slide 65" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-65.webp" alt="Slide 65" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-66.jpg" alt="Slide 66" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-66.webp" alt="Slide 66" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-67.jpg" alt="Slide 67" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-67.webp" alt="Slide 67" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-68.jpg" alt="Slide 68" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-68.webp" alt="Slide 68" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
@@ -507,61 +507,61 @@ sbx mcp ls
 
 <!-- chrome: false -->
 
-<img src="assets/slide-69.jpg" alt="Slide 69" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-69.webp" alt="Slide 69" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-70.jpg" alt="Slide 70" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-70.webp" alt="Slide 70" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-71.jpg" alt="Slide 71" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-71.webp" alt="Slide 71" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-72.jpg" alt="Slide 72" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-72.webp" alt="Slide 72" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-73.jpg" alt="Slide 73" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-73.webp" alt="Slide 73" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-74.jpg" alt="Slide 74" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-74.webp" alt="Slide 74" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-75.jpg" alt="Slide 75" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-75.webp" alt="Slide 75" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-76.jpg" alt="Slide 76" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-76.webp" alt="Slide 76" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-77.jpg" alt="Slide 77" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-77.webp" alt="Slide 77" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-78.jpg" alt="Slide 78" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-78.webp" alt="Slide 78" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
@@ -585,28 +585,28 @@ sbx policy log
 
 <!-- chrome: false -->
 
-<img src="assets/slide-79.jpg" alt="Slide 79" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-79.webp" alt="Slide 79" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-80.jpg" alt="Slide 80" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-80.webp" alt="Slide 80" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-81.jpg" alt="Slide 81" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-81.webp" alt="Slide 81" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-82.jpg" alt="Slide 82" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-82.webp" alt="Slide 82" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
 
 ---
 
 <!-- chrome: false -->
 
-<img src="assets/slide-83.jpg" alt="Slide 83" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
+<img src="assets/slide-83.webp" alt="Slide 83" width="1280" height="720" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:fill" />
